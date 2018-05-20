@@ -20,3 +20,18 @@ CREATE TABLE user (
 
 INSERT INTO user
 VALUES ('test', 'test', 519, '01086138458');
+
+CREATE TABLE sleepout_notice(
+	notice_id BIGINT(20) unsigned NOT NULL auto_increment,
+    sleep_w_time DATE NOT NULL,
+    sleep_d_time DATE NOT NULL,
+    send TINYINT(1) NOT NULL DEFAULT 0,
+    PRIMARY KEY (notice_id)
+);
+
+CREATE TABLE sleepout_record( 
+notice_id BIGINT(20) unsigned NOT NULL,
+emirim_id VARCHAR(20) NOT NULL,
+sleep_type CHAR(9) NOT NULL,
+recognize TINYINT(1) NOT NULL DEFAULT 0
+);
