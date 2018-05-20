@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
-import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.User2;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
@@ -61,6 +60,14 @@ public class UserInfoActivity extends AppCompatActivity {
                 startActivity(intent);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 finish();
+            }
+        });
+
+        findViewById(R.id.modifyUserPwd).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserInfoActivity.this, ModifyPwdActivity.class);
+                startActivity(intent);
             }
         });
 
