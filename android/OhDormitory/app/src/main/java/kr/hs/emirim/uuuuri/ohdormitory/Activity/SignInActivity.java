@@ -82,6 +82,7 @@ public class SignInActivity extends BaseActivity{
             if (user.getEmirim_id().equals(email) && user.getPassword().equals(password))
             {
                 hideProgressDialog();
+                Log.e(TAG, "user:"+user.toString());
                 moveActivity(user);
                 return;
             }

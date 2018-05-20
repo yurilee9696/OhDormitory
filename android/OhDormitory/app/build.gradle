@@ -17,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
@@ -32,10 +33,18 @@ dependencies {
     compile 'com.google.firebase:firebase-core:11.4.2'
     compile 'com.google.firebase:firebase-auth:11.4.2'
     compile 'com.google.firebase:firebase-messaging:11.4.2'
-    compile 'com.android.support:cardview-v7:23.0.1'
-    compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:cardview-v7:26.+'
+    compile 'com.android.support:recyclerview-v7:26.+'
     compile 'com.journeyapps:zxing-android-embedded:3.5.0'
     compile 'com.google.code.gson:gson:2.7'
+
+    compile 'com.google.http-client:google-http-client-android:+'
+
+    compile 'com.google.api-client:google-api-client-android:+'
+
+    compile 'com.google.api-client:google-api-client-gson:+'
+
     testCompile 'junit:junit:4.12'
+
 }
 apply plugin: 'com.google.gms.google-services'
