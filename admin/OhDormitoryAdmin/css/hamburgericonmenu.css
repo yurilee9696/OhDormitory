@@ -1,0 +1,252 @@
+
+    #header{
+        width: 100%;
+        height: 60px;
+        background-color: #FCD465;
+    }
+    #logo{
+        margin-top: 10px;
+        margin-left: 15px;
+    }
+    #fullscreenmenu ul li{
+        display: inline;
+        margin: 0px 20px;
+    }
+    #fullscreenmenu ul{
+        margin-top: 20px;
+        padding-right: 5%;
+    }
+    #fullscreenmenu ul li a{
+        text-decoration: none;
+        color: #fff;
+    }
+    #hamburgerui li{
+        display: inline;
+    }
+    #hamburgericonmenuwrapper{
+        float:right ;
+        height: 60px;
+        width: 90%;
+        text-align: right;
+    }
+
+
+@media (max-width: 600px) { /* 2nd breaking point */
+
+	#hamburgerui li a{
+		padding: 20px; /*padding inside each link */
+	}
+
+  /*여기서만*/
+  #hamburgericonmenuwrapper{
+	z-index: 10000;
+	position: absolute;
+  font-size: 16px; /* base font size for em values below */
+}
+
+/* ###### CSS for Hamburger UI DIV and links ###### */
+
+#hamburgerui{
+	overflow: hidden;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 2; /* make #hamburgerui higher in z-index than #fullscreenmenu */
+}
+
+#hamburgerui ul{
+	margin: 0;
+	padding: 0;
+	font: bold 16px 'Bitter', sans-serif; /* #hamburgerui font size (Bitter is Google font) */
+	list-style-type: none;
+}
+
+#hamburgerui li{
+	display: inline;
+	margin: 0;
+}
+
+#hamburgerui li a{
+	float: left;
+	display: block;
+  position: relative;
+	text-decoration: none;
+	margin: 0;
+	color: white;
+  outline: none;
+	-webkit-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+#hamburgerui li:last-of-type a{
+  width: 35px; /* width of last LI A containing hamburger style icon */
+  
+}
+
+#hamburgerui li:last-of-type a:after{
+  content: 'Menu';
+  visibility: hidden;
+}
+
+#hamburgerui li a:visited{
+	color: white;
+}
+
+#hamburgerui li a:hover{
+    /*background of UI links for hover state  */
+}
+
+
+#navtoggler{  /* Main hamburger icon to toggle menu state */
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 8px; /* change font size to change hamburger icon dimensions. Leave width/height below alone */
+  width: 2em;
+  height: 1em;
+  padding: 0;
+  text-indent: -1000px;
+  border: 0.6em solid white;
+  /* border color */
+  border-width: 0.3em 0;
+  cursor: pointer;
+  -webkit-transform: translate3D(-50%, -50%, 0);
+  transform: translate3D(-50%, -50%, 0); /* center hamburger icon inside link */
+  -webkit-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
+}
+
+
+#navtoggler::before, #navtoggler::after{
+  /* inner strip inside hamburger icon */
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 0.3em;
+  top: 60%;
+  margin-top: -0.3em;
+  left: 0;
+  background: white; /* stripes background color. Change to match border color of parent label above */
+  -webkit-transition: all 0.3s ease-in;
+  transition: all 0.3s ease-in;
+}
+
+
+/* ###### CSS for Full Screen Menu NAV ###### */
+
+#fullscreenmenu{
+  width: 50%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  background: #FBC635;/* background color of full screen menu */
+	padding-top: 80px; 
+  z-index: 1;
+	visibility: hidden;
+	overflow: auto;
+	font-family: 'Bitter', sans-serif; /* 'Bitter' is Google font */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transform: translate3D(0, -100%, 0); /* hide menu initially on screen by offsetting it vertically */
+  transform: translate3D(0, -100%, 0); 
+  -webkit-transition: -webkit-transform 0.5s, visibility 0s 0.5s;
+  transition: transform 0.5s, visibility 0s 0.5s;
+}
+
+#fullscreenmenu ul{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	width: 100%;
+  position: relative;
+  font-size: 1em; /* font size of UL menu */
+  text-transform: uppercase;
+  -webkit-transform: translate3D(0, -40px, 0);
+  transform: translate3D(0, -40px, 0);
+  opacity: 0;
+  transition: all 0.5s 0.4s;
+}
+
+#fullscreenmenu ul li{
+	width: 100%; /* by default, show 2 columns of links */
+	float: left;
+	display: inline;
+  text-align: center;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	margin-bottom: 25px; /* bottom spacing between LI */
+}
+
+#fullscreenmenu ul li a{
+  text-decoration: none;
+  position: relative;
+  color: white; /* link color */ /* general spacing between links */
+  -webkit-transition: background 0.3s;
+  transition: background 0.3s;
+  display: block;
+}
+
+
+#fullscreenmenu ul li a:hover{
+  background: #FCD465;
+}
+
+#fullscreenmenu ul li a:hover:after{
+  width: 100%;
+}
+
+/* #### Menu Hamburger Icon UI when shrinked CSS ######## */
+
+#hamburgerui.shrink li:nth-last-of-type(n+2) a{
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+
+/* #### Menu Opened State CSS ######## */
+
+#hamburgericonmenuwrapper.open #fullscreenmenu{
+	visibility: visible;
+  -webkit-transform: translate3D(0, 0, 0); /* show menu by shifting it vertically to visible position within container */
+  transform: translate3D(0, 0, 0);
+  -webkit-transition: -webkit-transform 0.5s;
+  transition: transform 0.5s;
+}
+
+#hamburgericonmenuwrapper.open #navtoggler{
+  border-width: 0;
+}
+
+#hamburgericonmenuwrapper.open #navtoggler::before{
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg); /* rotate line to create "x" */
+}
+
+#hamburgericonmenuwrapper.open #navtoggler::after{
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg); /* rotate line to create "x" */
+}
+
+#hamburgericonmenuwrapper.open #hamburgerui li:nth-last-of-type(n+2) a{
+  opacity: 0;
+  pointer-events: none;
+}
+
+#hamburgericonmenuwrapper.open #fullscreenmenu ul{
+  opacity: 1;
+  -webkit-transform: translate3D(0, 0, 0);
+  transform: translate3D(0, 0, 0); /* restore UL to original positon */
+}
+}
+
+@media (max-width: 480px) { /* 3rd breaking point */
+  #fullscreenmenu ul{
+    font-size: 1em;
+  }
+}

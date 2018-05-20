@@ -4,16 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>오몇점</title>
+
+    <!--Remove this mobile friendly meta tag if you already have it on page -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="http://fonts.googleapis.com/css?family=Bitter&subset=latin" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="css/hamburgericonmenu.css" />
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script src="js/hamburgericonmenu.js">
+
+/***********************************************
+* Hamburger Icon Menu - (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* Please keep this notice intact
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for this script and 100s more
+***********************************************/
+
+</script>
 </head>
 <style>
-    #header{
-        width: 100%;
-        height: 50px;
-        background-color: #FCD465;
+    html,body{
+        margin: 0px;
+        padding: 0px;
     }
 </style>
 <body>
-    <div id="header"></div>
+    <div id="header">
+        <img id="logo" src="image/logo.svg" alt="web Icon" height="40" width="40">
+        <div id="hamburgericonmenuwrapper">
+
+            <div id="hamburgerui">
+                <ul>
+                    <li><a href="#"><span id="navtoggler"></span></a></li>
+                </ul>
+            </div>
+            <nav id="fullscreenmenu">
+                    <ul>
+                        <li><a href="#">회원관리</a></li>
+                        <li><a href="#">공지사항</a></li>
+                        <li><a href="#">세탁일지</a></li>
+                        <li><a href="#">외박관리</a></li>
+                    <ul>
+            </nav>
+            
+        </div>
+    </div>
 </body>
 </html>
