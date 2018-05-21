@@ -46,6 +46,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
         noticeDate.setText("게시일 : " +notice.getW_time());
         noticeContent.setText(notice.getContent());
     }
+
     // onClick Method
     public void settings(View v){
         switch (v.getId()){
