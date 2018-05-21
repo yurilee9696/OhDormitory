@@ -1,7 +1,10 @@
 package kr.hs.emirim.uuuuri.ohdormitory.Activity;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,10 +12,25 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import kr.hs.emirim.uuuuri.ohdormitory.SQL.Sender;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URLEncoder;
+import java.util.Iterator;
+
+import kr.hs.emirim.uuuuri.ohdormitory.Adapter.Connector;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
@@ -124,7 +142,175 @@ public class ModifyPwdActivity extends AppCompatActivity {
         mDialog.show();
     }
 
+    class Sender extends AsyncTask<Void,Void,String> {
 
+        Activity mActivity;
+
+        String urlAddress;
+
+        String id, password, newPassword;
+        /*
+            1.OUR CONSTRUCTOR
+            2.RECEIVE CONTEXT,URL ADDRESS AND EDITTEXTS FROM OUR MAINACTIVITY
+        */
+        public Sender(Activity activity, String urlAddress, String id, String password, String newPassword) {
+            this.mActivity = activity;
+            this.urlAddress = urlAddress;
+
+            //GET TEXTS FROM EDITEXTS
+            this.id = id;
+            this.password = password;
+            this.newPassword = newPassword;
+        }
+    /*
+   1.SHOW PROGRESS DIALOG WHILE DOWNLOADING DATA
+    */
+
+        /*
+        1.WHERE WE SEND DATA TO NETWORK
+        2.RETURNS FOR US A STRING
+         */
+        @Override
+        protected String doInBackground(Void... params) {
+            return this.send();
+        }
+
+        /*
+      1. CALLED WHEN JOB IS OVER
+      2. WE DISMISS OUR PD
+      3.RECEIVE A STRING FROM DOINBACKGROUND
+       */
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+
+            if(response != null)
+            {
+                //SUCCESS
+                Toast.makeText(mActivity.getApplicationContext(),"변경 성공",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                mActivity.startActivity(intent);
+
+            }else
+            {
+                //NO SUCCESS
+                Toast.makeText(mActivity.getApplicationContext(),"변경 실패",Toast.LENGTH_LONG).show();
+            }
+        }
+
+        /*
+        SEND DATA OVER THE NETWORK
+        RECEIVE AND RETURN A RESPONSE
+         */
+        private String send()
+        {
+            //CONNECT
+            HttpURLConnection con= Connector.connect(urlAddress);
+
+            if(con==null)
+            {
+                return null;
+            }
+
+            try
+            {
+                OutputStream os=con.getOutputStream();
+
+                //WRITE
+                BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
+                bw.write(new UserDataPacker(id, password, newPassword).packUserData());
+
+                bw.flush();
+
+                //RELEASE RES
+                bw.close();
+                os.close();
+
+                //HAS IT BEEN SUCCESSFUL?
+                int responseCode=con.getResponseCode();
+
+                if(responseCode==con.HTTP_OK)
+                {
+                    //GET EXACT RESPONSE
+                    BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    StringBuffer response=new StringBuffer();
+
+                    String line;
+
+                    //READ LINE BY LINE
+                    while ((line=br.readLine()) != null)
+                    {
+                        response.append(line);
+                    }
+
+                    //RELEASE RES
+                    br.close();
+
+                    return response.toString();
+
+                }else
+                {
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+    }
+
+    class UserDataPacker {
+        private String emirim_id;
+        private String password;
+        private String newPassword;
+
+        public UserDataPacker(String emirim_id, String password, String newPassword) {
+            this.emirim_id = emirim_id;
+            this.password = password;
+            this.newPassword = newPassword;
+        }
+
+        public String packUserData(){
+            JSONObject jo = new JSONObject();
+            StringBuffer packedData = new StringBuffer();
+
+            try{
+                jo.put("emirim_id", emirim_id);
+                jo.put("password", password);
+                jo.put("new_password", newPassword);
+
+                Boolean firstValue = true;
+
+                Iterator it = jo.keys();
+
+                do{
+                    String key = it.next().toString();
+                    String value = jo.get(key).toString();
+
+                    if(firstValue){
+                        firstValue = false;
+                    }else{
+                        packedData.append("&");
+                    }
+
+                    packedData.append(URLEncoder.encode(key, "UTF-8"));
+                    packedData.append("=");
+                    packedData.append(URLEncoder.encode(value, "UTF-8"));
+                }while(it.hasNext());
+
+                return packedData.toString();
+            }catch(JSONException e){
+                e.printStackTrace();
+            }catch(UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
 }
 
 

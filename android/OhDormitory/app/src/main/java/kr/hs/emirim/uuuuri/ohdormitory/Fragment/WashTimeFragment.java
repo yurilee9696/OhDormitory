@@ -3,7 +3,6 @@ package kr.hs.emirim.uuuuri.ohdormitory.Fragment;
 
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -25,7 +24,6 @@ import java.util.Date;
 import kr.hs.emirim.uuuuri.ohdormitory.Adapter.NotificationAdapter;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Day;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.User2;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -52,12 +50,12 @@ public class WashTimeFragment extends Fragment implements Day{
 
     private NotificationAdapter notificationAdapter;
 
-    private User2 mUser;
+    private User mUser;
     private int mFloor;
     private int mRoomNumber[];
     private String nowDate;
 
-    private User2 washer[][] = {
+    private User washer[][] = {
             {null, null, null},
             {null, null, null},
             {null, null, null}
@@ -139,8 +137,8 @@ public class WashTimeFragment extends Fragment implements Day{
         SharedPreferences prefs = this.getActivity().getSharedPreferences(USER_INFO_PREF, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = prefs.getString(OBJECT_USER, "");
-        mUser = gson.fromJson(json, User2.class);
-        mFloor = mRoomNumber[mUser.getRoomNumber()]/100;
+        mUser = gson.fromJson(json, User.class);
+//        mFloor = mRoomNumber[mUser.getRoom_num()]/100;
     }
 
     // set the textview
@@ -495,7 +493,6 @@ public class WashTimeFragment extends Fragment implements Day{
 
                 if (washer[i][j] != null && washer[i][j].toString().equals(mUser.toString())) {
                     Log.e(TAG, washer[i][j].equals(mUser)+"");
-                    Log.e(TAG, washer[i][j].isNull() +"/"+mUser.isNull());
                     return address+"/"+childName+i+"/"+j;
                 }
             }
@@ -545,10 +542,10 @@ public class WashTimeFragment extends Fragment implements Day{
         final Dialog dialog = new Dialog(view.getContext(), R.style.MyDialog);
         dialog.setContentView(R.layout.dialog_style2);
         String str;
-        if(washer[i][j].getRoomNumber() > mRoomNumber.length)
-            str = washer[i][j].getRoomNumber() + "호";
+        if(washer[i][j].getRoom_num() > mRoomNumber.length)
+            str = washer[i][j].getRoom_num() + "호";
         else
-            str = mRoomNumber[washer[i][j].getRoomNumber()] + "호";
+            str = mRoomNumber[washer[i][j].getRoom_num()] + "호";
 
         if (washer[i][j].getName() != null)
             str += " " + washer[i][j].getName() + " 학생이 ";

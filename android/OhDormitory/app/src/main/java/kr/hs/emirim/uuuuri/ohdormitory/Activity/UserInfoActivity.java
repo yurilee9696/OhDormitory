@@ -10,13 +10,13 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
-import kr.hs.emirim.uuuuri.ohdormitory.Model.User2;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 public class UserInfoActivity extends AppCompatActivity {
     private final String USER_INFO_PREF = "User info";
     private final String OBJECT_USER = "Object user";
-    User2 mUser;
+    User mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class UserInfoActivity extends AppCompatActivity {
 
         mUser = getUserInfo();
         ((TextView)findViewById(R.id.userName)).setText(mUser.getName());
-        ((TextView)findViewById(R.id.roomNumber)).setText(String.valueOf(roomNumberMap[mUser.getRoomNumber()]));
+        ((TextView)findViewById(R.id.roomNumber)).setText(String.valueOf(roomNumberMap[mUser.getRoom_num()]));
 
         findViewById(R.id.back).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,10 +75,10 @@ public class UserInfoActivity extends AppCompatActivity {
 
     }
     // 현재 사용자 객체 get
-    private User2 getUserInfo(){
+    private User getUserInfo(){
         SharedPreferences prefs = getSharedPreferences(USER_INFO_PREF, MODE_PRIVATE);
         Gson gson = new Gson();
         String json = prefs.getString(OBJECT_USER, "");
-        return gson.fromJson(json, User2.class);
+        return gson.fromJson(json, User.class);
     }
 }

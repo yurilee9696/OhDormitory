@@ -20,13 +20,10 @@ CREATE TABLE user (
 );
 
 INSERT INTO user
-<<<<<<< HEAD
 VALUES ('test', 'test', 'test', 519, '01086138458');
 
 INSERT INTO user
 VALUES ('test2', 'test2', 'test2', 520, '01086188458');
-=======
-VALUES ('test', 'test', 519, '01086138458');
 
 CREATE TABLE sleepout_notice(
 	notice_id BIGINT(20) unsigned NOT NULL auto_increment,
@@ -42,4 +39,61 @@ emirim_id VARCHAR(20) NOT NULL,
 sleep_type CHAR(9) NOT NULL,
 recognize TINYINT(1) NOT NULL DEFAULT 0
 );
->>>>>>> c4f03ce78afacb0f3b179c164953e5166d39707e
+
+
+CREATE TABLE notice(
+	notice_id BIGINT(20) unsigned NOT NULL auto_increment,
+	title VARCHAR(30) NOT NULL,
+	type TINYINT(1) NOT NULL,
+	w_time date NOT NULL,
+	PRIMARY KEY (notice_id)
+);
+
+# type (0 : basic_notice / 1 : clean_notice / 2 : sleepout_notice )
+
+INSERT INTO notice
+VALUES (NULL,'전원외박 안내', '0', '2018-05-15');
+INSERT INTO notice
+VALUES (NULL,'청소구역', '1', '2018-05-15');
+INSERT INTO notice
+VALUES (NULL,'외박신청', '2', '2018-05-15');
+INSERT INTO notice
+VALUES (NULL,'호실 변경 안내', '0', '2018-05-15');
+
+
+CREATE TABLE basic_notice(
+	notice_id BIGINT(20) unsigned NOT NULL,
+	content VARCHAR(1000) NOT NULL,
+	PRIMARY KEY (notice_id)
+);
+
+INSERT INTO basic_notice
+VALUES (1,'여러분 전부 나가세요..');
+
+INSERT INTO basic_notice
+VALUES (4,'519호랑 518호랑 전부 바꾸세요.');
+
+
+CREATE TABLE clean_notice(
+	notice_id BIGINT(20) unsigned NOT NULL,
+	clean_area TINYINT(1) NOT NULL,
+	clean_room INT(3) NOT NULL,
+	PRIMARY KEY (notice_id)
+);
+
+#clean_area (세면실:0 / 세탁실,탈의실:1 / 샤워실:2 / 복도:3 / 휴게실:4 / 계단:5 / 화장실:6 ) 
+INSERT INTO clean_notice VALUES (2, 0, 401);
+INSERT INTO clean_notice VALUES (2, 1, 402);
+INSERT INTO clean_notice VALUES (2, 2, 403);
+INSERT INTO clean_notice VALUES (2, 3, 404);
+INSERT INTO clean_notice VALUES (2, 4, 405);
+INSERT INTO clean_notice VALUES (2, 5, 406);
+INSERT INTO clean_notice VALUES (2, 6, 407);
+INSERT INTO clean_notice VALUES (2, 0, 501);
+INSERT INTO clean_notice VALUES (2, 1, 502);
+INSERT INTO clean_notice VALUES (2, 2, 503);
+INSERT INTO clean_notice VALUES (2, 3, 504);
+INSERT INTO clean_notice VALUES (2, 4, 505);
+INSERT INTO clean_notice VALUES (2, 5, 506);
+INSERT INTO clean_notice VALUES (2, 6, 507);
+

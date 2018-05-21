@@ -11,8 +11,10 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Map;
 
-import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.CleanNotice;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice2;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 public class NoticeCleanDetailActivity extends AppCompatActivity {
@@ -43,12 +45,12 @@ public class NoticeCleanDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        Notice notice = (Notice) bundle.getSerializable(PUT_EXTRA_NOTICE);
-        String room[] = notice.getClean();
-
+        CleanNotice notice = (CleanNotice) bundle.getSerializable(PUT_EXTRA_NOTICE);
+        Map<Integer, Integer> cleanList = notice.getCleanList();
 
         ArrayList<Button> fourthFloor = new ArrayList<>();
         ArrayList<Button> fifthFloor = new ArrayList<>();
+        int index = 0;
 
         GridLayout fourthGrid = findViewById(R.id.fourth_grid);
         for(int i = 0; i<CLEAN_AREA_SIZE; i++){
@@ -56,11 +58,10 @@ public class NoticeCleanDetailActivity extends AppCompatActivity {
             button.setId(FOURTH_ID++);
             button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             button.setBackgroundResource(R.drawable.gridlayout_solid);
-            button.setText(room[i]);
+            button.setText(String.valueOf(cleanList.get(index++)));
             fourthGrid.addView(button);
             fourthFloor.add(button);
         }
-
 
         GridLayout fifthGrid = findViewById(R.id.fifth_grid);
 
@@ -69,7 +70,7 @@ public class NoticeCleanDetailActivity extends AppCompatActivity {
             button.setId(FIFTH_ID++);
             button.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             button.setBackgroundResource(R.drawable.gridlayout_solid2);
-            button.setText(room[i+CLEAN_AREA_SIZE]);
+            button.setText(String.valueOf(cleanList.get(index++)));
             fifthGrid.addView(button);
             fifthFloor.add(button);
         }
