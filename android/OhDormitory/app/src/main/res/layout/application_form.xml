@@ -135,35 +135,10 @@
                     android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="15dp">
-                    <Spinner
-                        android:id="@+id/frontNumber"
-                        android:layout_width="60dp"
-                        android:layout_height="30dp"
-                        android:entries="@array/frontNumber"
-                        android:gravity="right"
-                        android:background="@drawable/spinner_bg"
-                        android:dropDownWidth="60dp"
-                        ></Spinner>
                     <TextView
+                        android:id="@+id/tv_parent_number"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-"/>
-                    <EditText
-                        android:id="@+id/midNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLength="4"
-                        android:hint="0000"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-"/>
-                    <EditText
-                        android:id="@+id/rearNumber"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLength="4"
-                        android:hint="0000"/>
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

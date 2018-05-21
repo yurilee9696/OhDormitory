@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,30 +24,40 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.User2;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 public class SignInActivity extends BaseActivity{
     private final String USER_INFO_PREF = "User info";
     private final String OBJECT_USER = "Object user";
-    private final String URL = "http://54.203.113.95/getjson.php";
+    private final String URL = "http://54.203.113.95/getUser.php";
 
-    private final String TAG = "SIGNINACTIVITY";
+    private final String TAG = "SIGN_IN_ACTIVITY";
 
     EditText mMailEt;
     EditText mPassWordEt;
     Dialog mDialog;
 
     // PHP를 읽어올때 사용할 변수
-    private GettingPHP gPHP;
+    private Sender sender;
 
     // 테이블에 포함된 레코드들을 가지고 있을 리스트 변수
     private ArrayList<User> users;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sigin_in);
+
+        User user = getUserInfo();
+
+        if(user != null){
+            Log.e(TAG, user.toString());
+            moveActivity(user);
+        }
+        else
+            Log.e(TAG, "null");
+
 
         getWindow().setBackgroundDrawableResource(R.drawable.signin);
 
@@ -64,8 +73,8 @@ public class SignInActivity extends BaseActivity{
             }
         });
 
-        gPHP = new GettingPHP();
-        gPHP.execute(URL);
+        sender = new Sender();
+        sender.execute(URL);
 
     }
 
@@ -139,15 +148,12 @@ public class SignInActivity extends BaseActivity{
         editor.commit();
 
         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         finish();
     }
 
-
-
-
-
-    class GettingPHP extends AsyncTask<String, Integer, String> {
+    class Sender extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -199,12 +205,12 @@ public class SignInActivity extends BaseActivity{
             }
         }
     }
-
-
-
-
-
-
-
+    // 현재 사용자 객체 get
+    private User getUserInfo(){
+        SharedPreferences prefs = getSharedPreferences(USER_INFO_PREF, MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = prefs.getString(OBJECT_USER, "");
+        return gson.fromJson(json, User.class);
+    }
 }
 

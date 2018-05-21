@@ -1,6 +1,10 @@
 package kr.hs.emirim.uuuuri.ohdormitory.Fragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.nfc.Tag;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +15,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-import kr.hs.emirim.uuuuri.ohdormitory.Adapter.NoticeListAdapater;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import kr.hs.emirim.uuuuri.ohdormitory.Activity.SignInActivity;
+import kr.hs.emirim.uuuuri.ohdormitory.Adapter.NoticeListAdapter;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.BasicNotice;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.CleanNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice2;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.NoticeKind;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.SleepoutNotice;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 /**
@@ -23,18 +47,27 @@ import kr.hs.emirim.uuuuri.ohdormitory.R;
  */
 
 public class NoticeFragment extends Fragment {
+    private final String TAG = "NOTICE_FRAGMENT";
+
+    private final String USER_INFO_PREF = "User info";
+    private final String OBJECT_USER = "Object user";
+
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Notice> noticeDataset;
 
+    private Sender sender;
+    private final String URL = "http://54.203.113.95/getNotice.php";
 
-    private TextView textView;
+    private User mUser;
+    private Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.notice_fragment, container, false);
+        mContext = view.getContext();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view_notice);
 
         // use this setting to improve performance if you know that changes
@@ -48,69 +81,122 @@ public class NoticeFragment extends Fragment {
 
 
         noticeDataset = new ArrayList<>();
-        mAdapter = new NoticeListAdapater(noticeDataset);
+        mAdapter = new NoticeListAdapter(noticeDataset, getUserInfo());
         mRecyclerView.setAdapter(mAdapter);
 
-        changeNotice();
+
+        sender = new Sender();
+        sender.execute(URL);
+
+
         return view;
     }
 
-    public void changeNotice(){
+    class Sender extends AsyncTask<String, Integer, String> {
 
-//        mDatabase = FirebaseDatabase.getInstance();
-//
-//        final DatabaseReference noticeRef = mDatabase.getReference("notice");
-//
-//        ValueEventListener noticeListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot notice) {
-//                noticeDataset.clear();
-//
-//                Iterator<DataSnapshot> childIterator = notice.getChildren().iterator();
-//                //users의 모든 자식들의 key값과 value 값들을 iterator로 참조
-//                while(childIterator.hasNext()) {
-//                    DataSnapshot timeStamp=childIterator.next();
-//
-//
-//                    String notice_kind=timeStamp.child("notice_kind").getValue(String.class);
-//                    String w_time = timeStamp.child("w_time").getValue(String.class);
-//                    String d_time = timeStamp.child("d_time").getValue(String.class);
-//                    String notice_title=timeStamp.child("notice_title").getValue(String.class);
-//                    Log.e("title 가져옵니당",notice_title);
-//
-//                    if(notice_kind.equals("공지사항")){//+content
-//                        String content = timeStamp.child("content").getValue(String.class);
-//                        Log.e("content 가져옵니당",content);
-//
-//                        noticeDataset.add(new Notice(notice_kind,w_time,d_time, notice_title,content));
-//
-//                    }else if(notice_kind.equals("청소구역")){//+청소구역에 따른 청소 당번 총 7개
-//                        String clean[]=new String[14];
-//                        for(int i=0;i<7;i++) {
-//                            clean[i]=timeStamp.child("clean_4").child(String.valueOf(i)).getValue(String.class);
-//                        }
-//                        for(int i = 0; i<7; i++){
-//                            clean[i+7]=timeStamp.child("clean_5").child(String.valueOf(i)).getValue(String.class);
-//                        }
-//                        noticeDataset.add(new Notice(notice_kind,w_time,d_time, notice_title,clean));
-//                    }else if(notice_kind.equals("외박일지")){//+qr코드
-//                        String sleep_w_time = timeStamp.child("sleep_w_time").getValue(String.class);
-//                        String sleep_d_time = timeStamp.child("sleep_d_time").getValue(String.class);
-//                        noticeDataset.add(new Notice(notice_kind,w_time,d_time, notice_title, sleep_w_time, sleep_d_time));
-//                    }
-//
-//                    mAdapter.notifyDataSetChanged();
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        };
-//        noticeRef.addValueEventListener(noticeListener);
-//
+        @Override
+        protected String doInBackground(String... params) {
+            StringBuilder jsonHtml = new StringBuilder();
+            try {
+                URL phpUrl = new URL(params[0]);
+                HttpURLConnection conn = (HttpURLConnection)phpUrl.openConnection();
 
+                if ( conn != null ) {
+                    conn.setConnectTimeout(10000);
+                    conn.setUseCaches(false);
+
+                    if ( conn.getResponseCode() == HttpURLConnection.HTTP_OK ) {
+                        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                        while ( true ) {
+                            String line = br.readLine();
+                            if ( line == null )
+                                break;
+                            jsonHtml.append(line + "\n");
+                        }
+                        br.close();
+                    }
+                    conn.disconnect();
+                }
+            } catch ( Exception e ) {
+                e.printStackTrace();
+            }
+//            Log.e(TAG, "가져온 결과는 ? ? " + jsonHtml.toString());
+            return jsonHtml.toString();
+        }
+
+        protected void onPostExecute(String str) {
+            try {
+                JSONObject jObject = new JSONObject(str).getJSONObject("notice");
+                Iterator<String> iterator = jObject.keys();
+
+                while(iterator.hasNext()){
+                    String key = iterator.next();
+                    Log.e(TAG, key);
+                    JSONObject innerJObject = jObject.getJSONObject(key);
+                    JSONObject detailJson;
+
+                    switch(innerJObject.getInt("type")){
+                        case NoticeKind.BASIC_NOTICE: // 일반 공지사항
+                            //String notice_id, String title, String w_time, int type, String content
+                            detailJson = innerJObject.getJSONObject("detail");
+                            noticeDataset.add(
+                                    new BasicNotice(innerJObject.getInt("notice_id"),
+                                            innerJObject.getString("title"),
+                                            innerJObject.getString("w_time"),
+                                            innerJObject.getInt("type"),
+                                            detailJson.getString("content"))
+                            );
+                            break;
+                        case NoticeKind.CLEAN_NOTICE:
+                            //int notice_id, String title, String w_time, int type, Map<Integer, Integer> cleanList
+                            Map<Integer, Integer> map = new HashMap<>() ;
+                            JSONArray detailArray = innerJObject.getJSONArray("detail");
+                            for(int i = 0; i<detailArray.length(); i++){
+                                map.put(i, detailArray.getInt(i));
+                            }
+                            noticeDataset.add(
+                                    new CleanNotice(innerJObject.getInt("notice_id"),
+                                            innerJObject.getString("title"),
+                                            innerJObject.getString("w_time"),
+                                            innerJObject.getInt("type"),
+                                            map)
+                            );
+                            break;
+                        case NoticeKind.SLEEP_OUT_NOTICE:
+                            detailJson = innerJObject.getJSONObject("detail");
+                            //int notice_id, String title, String w_time, int type, String application_deadline, String sleep_w_time, String sleep_d_time, int send
+                            noticeDataset.add(
+                                    new SleepoutNotice(innerJObject.getInt("notice_id"),
+                                            innerJObject.getString("title"),
+                                            innerJObject.getString("w_time"),
+                                            innerJObject.getInt("type"),
+                                            detailJson.getString("application_deadline"),
+                                            detailJson.getString("sleep_w_time"),
+                                            detailJson.getString("sleep_d_time"),
+                                            detailJson.getInt("send"))
+                            );
+                            break;
+                    }
+
+                }
+
+            } catch (JSONException e) {
+
+                Log.e(TAG, "에러 : "+e.toString());
+            }
+            mAdapter.notifyDataSetChanged();
+        }
 
     }
+
+    // 현재 사용자 객체 get
+    private User getUserInfo(){
+        SharedPreferences prefs = mContext.getSharedPreferences(USER_INFO_PREF, mContext.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = prefs.getString(OBJECT_USER, "");
+        return gson.fromJson(json, User.class);
+    }
+
 
 }
 

@@ -8,7 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import kr.hs.emirim.uuuuri.ohdormitory.Model.BasicNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice2;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 public class NoticeDetailActivity extends AppCompatActivity {
@@ -34,23 +36,17 @@ public class NoticeDetailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        Notice notice = (Notice) bundle.getSerializable(PUT_EXTRA_NOTICE);
+        BasicNotice notice = (BasicNotice) bundle.getSerializable(PUT_EXTRA_NOTICE);
 
         TextView noticeTitle = findViewById(R.id.notice_title);
         TextView noticeDate = findViewById(R.id.notice_date);
         TextView noticeContent = findViewById(R.id.notice_content);
 
-        noticeTitle.setText(notice.getNotice_title());
-        String date = null;
-        if(notice.getW_time().equals("0")&&notice.getD_time().equals("0"))
-            date = "항시공지";
-        else if(notice.getW_time().equals(notice.getD_time()))
-            date = notice.getW_time();
-        else
-            date = notice.getW_time()+" - "+notice.getD_time();
-        noticeDate.setText(date);
+        noticeTitle.setText(notice.getTitle());
+        noticeDate.setText("게시일 : " +notice.getW_time());
         noticeContent.setText(notice.getContent());
     }
+
     // onClick Method
     public void settings(View v){
         switch (v.getId()){

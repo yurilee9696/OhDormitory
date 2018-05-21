@@ -20,13 +20,10 @@ CREATE TABLE user (
 );
 
 INSERT INTO user
-<<<<<<< HEAD
 VALUES ('test', 'test', 'test', 519, '01086138458');
 
 INSERT INTO user
 VALUES ('test2', 'test2', 'test2', 520, '01086188458');
-=======
-VALUES ('test', 'test', 519, '01086138458');
 
 CREATE TABLE sleepout_notice(
 	notice_id BIGINT(20) unsigned NOT NULL auto_increment,
@@ -36,10 +33,138 @@ CREATE TABLE sleepout_notice(
     PRIMARY KEY (notice_id)
 );
 
+INSERT INTO sleepout_notice
+VALUES (5,'2018-05-15', '2018-05-15', '2018-05-15', 1);
+
+
 CREATE TABLE sleepout_record( 
 notice_id BIGINT(20) unsigned NOT NULL,
 emirim_id VARCHAR(20) NOT NULL,
 sleep_type CHAR(9) NOT NULL,
 recognize TINYINT(1) NOT NULL DEFAULT 0
 );
->>>>>>> c4f03ce78afacb0f3b179c164953e5166d39707e
+
+
+CREATE TABLE notice(
+	notice_id BIGINT(20) unsigned NOT NULL auto_increment,
+	title VARCHAR(30) NOT NULL,
+	type TINYINT(1) NOT NULL,
+	w_time date NOT NULL,
+	PRIMARY KEY (notice_id)
+);
+
+# type (0 : basic_notice / 1 : clean_notice / 2 : sleepout_notice )
+
+INSERT INTO notice
+VALUES (NULL,'전원외박 안내', '0', '2018-05-15');
+INSERT INTO notice
+VALUES (NULL,'청소구역', '1', '2018-05-15');
+INSERT INTO notice
+VALUES (NULL,'외박신청', '2', '2018-05-15');
+INSERT INTO notice
+VALUES (NULL,'호실 변경 안내', '0', '2018-05-15');
+INSERT INTO notice
+VALUES (NULL,'외박신청2', '2', '2018-05-15');
+
+
+CREATE TABLE basic_notice(
+	notice_id BIGINT(20) unsigned NOT NULL,
+	content VARCHAR(1000) NOT NULL,
+	PRIMARY KEY (notice_id)
+);
+
+INSERT INTO basic_notice
+VALUES (1,'여러분 전부 나가세요..');
+
+INSERT INTO basic_notice
+VALUES (4,'519호랑 518호랑 전부 바꾸세요.');
+
+
+CREATE TABLE clean_notice(
+	notice_id BIGINT(20) unsigned NOT NULL,
+	clean_area INT(2) NOT NULL,
+	clean_room INT(3) NOT NULL
+);
+#필수
+#clean_area ( 4층 세면실:0 / 세탁실,탈의실:1 / 샤워실:2 / 복도:3 / 휴게실:4 / 계단:5 / 화장실:6 
+	5층 세면실:7 / 세탁실,탈의실:8 / 샤워실:9 / 복도:10 / 휴게실:11 / 계단:12 / 화장실:13) 
+INSERT INTO clean_notice VALUES (2, 0, 401);
+INSERT INTO clean_notice VALUES (2, 1, 402);
+INSERT INTO clean_notice VALUES (2, 2, 403);
+INSERT INTO clean_notice VALUES (2, 3, 404);
+INSERT INTO clean_notice VALUES (2, 4, 405);
+INSERT INTO clean_notice VALUES (2, 5, 406);
+INSERT INTO clean_notice VALUES (2, 6, 407);
+INSERT INTO clean_notice VALUES (2, 7, 501);
+INSERT INTO clean_notice VALUES (2, 8, 502);
+INSERT INTO clean_notice VALUES (2, 9, 503);
+INSERT INTO clean_notice VALUES (2, 10, 504);
+INSERT INTO clean_notice VALUES (2, 11, 505);
+INSERT INTO clean_notice VALUES (2, 12, 506);
+INSERT INTO clean_notice VALUES (2, 13, 507);
+
+CREATE TABLE user_score(
+	id BIGINT(20) unsigned NOT NULL auto_increment,
+	emirim_id VARCHAR(20) NOT NULL,
+	date DATE NOT NULL,
+	score_id INT(2) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+INSERT INTO user_score VALUES(null, 'test', '2018-05-21', 0);
+INSERT INTO user_score VALUES(null, 'test', '2018-05-20', 2);
+
+CREATE TABLE score_detail(
+	score_id INT(2) NOT NULL,
+	detail VARCHAR(20) NOT NULL,
+	score FLOAT(2,1) NOT NULL,
+	PRIMARY KEY (score_id)
+);
+
+#필수
+INSERT INTO score_detail VALUES(0, "타호실 무단 취침", -5.0);
+INSERT INTO score_detail VALUES(1, "취침 시간 소란", -5.0);
+INSERT INTO score_detail VALUES(2, "무단 외출", -5.0);
+INSERT INTO score_detail VALUES(3, "무단 입실", -5.0);
+INSERT INTO score_detail VALUES(4, "무단 외박", -5.0);
+INSERT INTO score_detail VALUES(5, "외부인 무단 출입", -5.0);
+INSERT INTO score_detail VALUES(6, "사감통제 불이행", -5.0);
+INSERT INTO score_detail VALUES(7, "태도 불손 및 불량", -5.0);
+INSERT INTO score_detail VALUES(8, "언어 폭력 또는 따돌림", -5.0);
+
+INSERT INTO score_detail VALUES(9, "무단 지각", -3.0);
+INSERT INTO score_detail VALUES(10, "기숙사 내 각종 소란 행위", -3.0);
+INSERT INTO score_detail VALUES(11, "허가되지 않은 전열전자기기 사용", -3.0);
+INSERT INTO score_detail VALUES(12, "불건전 물품 반입", -3.0);
+INSERT INTO score_detail VALUES(13, "시설물 고의 파손", -3.0);
+
+INSERT INTO score_detail VALUES(14, "타호실 무단 출입", -2.0);
+INSERT INTO score_detail VALUES(15, "당번 활동 불량", -2.0);
+INSERT INTO score_detail VALUES(16, "외부 음식물 반입", -2.0);
+INSERT INTO score_detail VALUES(17, "호실원에게 피해", -2.0);
+INSERT INTO score_detail VALUES(18, "인사예절 불량", -2.0);
+INSERT INTO score_detail VALUES(19, "선후배 질서 문란", -2.0);
+INSERT INTO score_detail VALUES(20, "복도,호실에 쓰레기 투기", -2.0);
+INSERT INTO score_detail VALUES(21, "창밖으로 쓰레기 투척", -2.0);
+INSERT INTO score_detail VALUES(22, "개인쓰레기 공동구역에 무단 투기", -2.0);
+INSERT INTO score_detail VALUES(23, "중앙통로 침입", -2.0);
+
+INSERT INTO score_detail VALUES(24, "점호 불참 및 점호 시 태도 불량", -1.0);
+INSERT INTO score_detail VALUES(25, "취침시간 소등위반", -1.0);
+INSERT INTO score_detail VALUES(26, "공동구역 사용시간 위반", -1.0);
+INSERT INTO score_detail VALUES(27, "기숙사내 실내화 미착용", -1.0);
+INSERT INTO score_detail VALUES(28, "복장 및 두발 불량", -1.0);
+INSERT INTO score_detail VALUES(29, "교문 밖 출입 시 용의 불량", -1.0);
+INSERT INTO score_detail VALUES(30, "개인위생 불결", -1.0);
+INSERT INTO score_detail VALUES(31, "개인 세탁물 및 소지품 관리 불량", -1.0);
+INSERT INTO score_detail VALUES(32, "호실 청소상태 불량", -1.0);
+INSERT INTO score_detail VALUES(33, "외박증 미인증", -1.0);
+INSERT INTO score_detail VALUES(34, "퇴실시간 위반", -1.0);
+INSERT INTO score_detail VALUES(35, "아침점호 후 재입실", -1.0);
+
+INSERT INTO score_detail VALUES(36, "공동구역 모범청소", 0.5);
+INSERT INTO score_detail VALUES(37, "호실 청소", 0.5);
+INSERT INTO score_detail VALUES(38, "기타 가산점", 0.5);
+
+INSERT INTO score_detail VALUES(39, "층장 활동", 1.0);
+INSERT INTO score_detail VALUES(40, "기숙사 행사 도움", 1.0);
