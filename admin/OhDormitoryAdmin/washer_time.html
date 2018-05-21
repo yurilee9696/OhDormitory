@@ -79,12 +79,39 @@
             vertical-align: middle;
             text-align: center;
         }
-        @media(max-width:45em) {
+        @media(max-width:640px) {
             #wash-div{
                 width: 100%;
-                margin-left: 20px;
-                margin-right: 20px;
             }
+            #wash-table{
+                padding: 10px;
+                width: 100%;
+            }
+            #wash-time{
+                width: 60%;
+            }
+            .washer-number{
+                padding-right: 0.2em;
+                padding-left: 0.1em;
+                padding-top: 0.1em;
+                padding-bottom: 0.1em;
+                font-size: 0.8em;
+            }
+            .border1, .border2{
+                width: 54%;
+            }
+            .border1{
+                margin-right: -10%;
+                margin-left: -12%;
+            }
+            #wash-time{
+                background-color: #FCD465;
+                font-size: 0.8em;
+                width: 80%;
+                padding: 0.1em;
+                margin-left: 0.2em;
+                margin-right: 0.2em;
+        }
         }
     </style>
 </head>
@@ -262,15 +289,28 @@
 
         var chb1=document.getElementById("b1-"+location); //선택된 위치의 border스타일 변경
         var chb2=document.getElementById("b2-"+location);
-
-        chb1.style.width="3.2em";
-        chb2.style.width="3.2em";
-        chb1.style.height="0.35em";
-        chb2.style.height="0.35em";
+        
         chb1.style.backgroundColor="#96B5C3";
         chb2.style.backgroundColor="#96B5C3";
-        chb1.style.marginRight="0.2em";
-        chb2.style.marginLeft="0.2em";
+        
+        chb1.style.height="0.35em";
+        chb2.style.height="0.35em";
+
+        if (window.matchMedia("(min-width: 640px)").matches) {
+            // 640px 이상에서 사용할 JavaScript
+            chb1.style.width="3.3em";
+            chb2.style.width="3.3em";
+            chb1.style.marginRight="0.2em";
+            chb2.style.marginLeft="0.2em";
+        } else {
+            // 640px 미만에서 사용할 JavaScript
+            chText.style.fontSize="1em";
+            chb1.style.width="36%";
+            chb2.style.width="36%";
+            chb1.style.marginRight="3%";
+            chb1.style.marginLeft="-11%";
+            chb2.style.marginLeft="4%";
+        }
     }
 </script>
 </html>
