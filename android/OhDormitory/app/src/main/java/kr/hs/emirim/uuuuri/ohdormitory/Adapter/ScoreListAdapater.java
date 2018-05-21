@@ -12,6 +12,7 @@ import java.util.HashMap;
 
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Score;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.StudentScore;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.UserScore;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 /**
@@ -19,7 +20,7 @@ import kr.hs.emirim.uuuuri.ohdormitory.R;
  */
 
 public class ScoreListAdapater extends RecyclerView.Adapter<ScoreListAdapater.ViewHolder> {
-    ArrayList<StudentScore> studentScoreList;
+    ArrayList<UserScore> studentScoreList;
     HashMap<Integer, Score> scoreHashMap;
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -33,7 +34,7 @@ public class ScoreListAdapater extends RecyclerView.Adapter<ScoreListAdapater.Vi
             tvScore = view.findViewById(R.id.score);
         }
     }
-    public ScoreListAdapater(ArrayList<StudentScore> studentScoreArrayList, HashMap<Integer, Score> scoreHashMap) {
+    public ScoreListAdapater(ArrayList<UserScore> studentScoreArrayList, HashMap<Integer, Score> scoreHashMap) {
         studentScoreList = studentScoreArrayList;
         this.scoreHashMap = scoreHashMap;
     }
@@ -49,13 +50,13 @@ public class ScoreListAdapater extends RecyclerView.Adapter<ScoreListAdapater.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.tvDate.setText(studentScoreList.get(position).getDate());
-            Log.e("이런", studentScoreList.get(position).getType()+"");
+//            Log.e("이런", studentScoreList.get(position).getType()+"");
 
-        if(scoreHashMap.get(studentScoreList.get(position).getType()) == null)
-            Log.e("저런", "저런");
+//        if(scoreHashMap.get(studentScoreList.get(position).getType()) == null)
+//            Log.e("저런", "저런");
 
-        holder.tvDetail.setText(scoreHashMap.get(studentScoreList.get(position).getType()).getDetail());
-        holder.tvScore.setText(scoreHashMap.get(studentScoreList.get(position).getType()).getScore()+"점");
+        holder.tvDetail.setText(scoreHashMap.get(studentScoreList.get(position).getScore_id()).getDetail());
+        holder.tvScore.setText(scoreHashMap.get(studentScoreList.get(position).getScore_id()).getScore()+"점");
     }
 
     @Override
