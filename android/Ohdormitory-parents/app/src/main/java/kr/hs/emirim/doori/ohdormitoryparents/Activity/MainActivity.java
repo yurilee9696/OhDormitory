@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -51,6 +52,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import kr.hs.emirim.doori.ohdormitoryparents.Adapter.RecyclerAdapter;
+import kr.hs.emirim.doori.ohdormitoryparents.FCM.FirebaseInstanceIDService;
 import kr.hs.emirim.doori.ohdormitoryparents.Manifest;
 import kr.hs.emirim.doori.ohdormitoryparents.Model.StudentInfo;
 import kr.hs.emirim.doori.ohdormitoryparents.R;
@@ -148,6 +150,11 @@ public class MainActivity extends BaseActivity {
             editor.commit();
 
                 Log.e("내 전화번호", myNumber);
+
+            //push 알람 토큰  database에
+            FirebaseMessaging.getInstance().subscribeToTopic("studentNotice");
+            FirebaseInstanceIDService f=new FirebaseInstanceIDService(myNumber);
+            f.sendRegistrationToServer();
 
             GetData task = new GetData();
             task.execute("http://54.203.113.95/getSleepoutQRInfo.php?parent_phone=" + myNumber);

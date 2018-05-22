@@ -31,10 +31,9 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
     private final String USER_INFO_PREF = "User info";
     private final String OBJECT_USER = "Object user";
 
-    public FirebaseInstanceIDService(Context context) {
-        mContext = context;
-        SharedPreferences pref = getSharedPreferences("pref", MODE_PRIVATE);
-        phone_number = pref.getString("phone_number", "");
+    public FirebaseInstanceIDService(String phone_number) {
+        this.phone_number = phone_number;
+
     }
 
     private static final String TAG = "MyFirebaseIIDService";
