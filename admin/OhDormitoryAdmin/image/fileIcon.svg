@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4865 436.571 149.429 149.429">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fcd465;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="baseline-insert_drive_file-24px" transform="translate(4865 436.571)">
+    <path id="패스_12" data-name="패스 12" class="cls-1" d="M16.452,2A12.436,12.436,0,0,0,4.062,14.452L4,114.072a12.436,12.436,0,0,0,12.39,12.452H91.167a12.489,12.489,0,0,0,12.452-12.452V39.357L66.262,2ZM60.036,45.584V11.339L94.28,45.584Z" transform="translate(20.905 10.452)"/>
+    <path id="패스_13" data-name="패스 13" class="cls-2" d="M0,0H149.429V149.429H0Z"/>
+  </g>
+</svg>

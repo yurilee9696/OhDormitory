@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/search.css" />
+    <title>회원관리</title>
+    <style>
+        html,body{
+            margin: 0px;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        #auth-body{
+            background-color: #f1f1f1;
+            margin-top: 75px;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+        #student-detail{
+            background-color: #fff;
+            width: 40em;
+            height: 10em;
+        }
+    </style>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+      $(document).ready(function(){
+         $("#header").load("header.html")    
+      });
+</script>  
+
+<script>
+    //상벌점 동적추가
+  //  var rowIndex = 1;
+  function SetValue(){
+        var oCurrentRow,oCurrentCell;
+        var sAddingHtml;
+        oCurrentRow = insertTable.insertRow();
+    //    rowIndex = oCurrentRow.rowIndex;
+        oCurrentCell = oCurrentRow.insertCell();
+     //   rowIndex++;
+ 
+      //날짜 받아오기
+      var dateInput = document.getElementById("pointDate").value;
+      //상벌점 받아오기
+      var fm = document.addPoint;
+      var point = fm.pointInput.options[fm.pointInput.selectedIndex].value; //상벌점 값이 저장되는 변수
+     //선택한 텍스트 받아오기
+      var pointStr = fm.pointInput.options[fm.pointInput.selectedIndex].text; //선택된 텍스트를 받아옴
+      //alert("point "+point+"이고 텍스트 : "+pointStr);
+
+
+      
+      var strHTML =  "<tr align='center'>";
+        strHTML += "<td width='50'>"+ dateInput +"</td>";
+        strHTML += "<td colspan=3 width='60'>"+pointStr+"</td>";
+        strHTML += "<td colspan=3 width='60'>"+point+"</td>";
+        strHTML += "</tr>";      
+         
+        oCurrentCell.innerHTML = strHTML;
+    }
+</script>
+
+
+<body>
+        <div id="header"></div>
+        <div id="auth-body">
+           <div>
+               <div id="search-div">
+                    <form action="authDetail.html" class="search-container">
+                        <input type="text" placeholder="Search.." name="search">
+                        <button type="submit"><img id="searchIcon" src="image/searchIcon.svg" alt="web Icon" height="32" width="32"></button>
+                    </form>
+                </div>
+                <div id="student-detail">
+                    <div id="student-info">
+                        <p>이유리 401호</p> <!--form에서 검색한 데이터로 교체-->
+                        <form>
+                            <label>이메일</label><input type="email" value="wwhhoo0011@e-mirim.hs.kr"><br>
+                            <label>학부모 연락처</label><input type="text" value="01033909696"><input type="button" value="정보수정">
+                        </form>
+                    </div>
+                    <div id="student-point">
+                        <p>상벌점</p>
+                        <form name="addPoint">
+                            <table name='insertTable' id='insertTable' border=0 cellpadding=0 cellspacing=0>
+                                 
+                            </table>
+                            <input type="date" id="pointDate">
+                            <select name="pointInput">
+                                <optgroup label="벌점">
+                                    <option value="-5">타호실 무단 취침</option>
+                                    <option value="-5">취침시간 소란</option>
+                                    <option value="-5">무단외출</option>
+                                    <option value="-5">무단입실</option>
+                                </optgroup>
+                                <optgroup label="상점">
+                                    <option value="0.5">공동구역 모범 청소</option>
+                                    <option value="0.5">호실청소</option>
+                                </optgroup>
+                            </select>
+                            <input type="button" value="추가" onclick='javascript:SetValue();'>
+                           
+                        </form> 
+                    </div>
+                </div>
+             </div>
+             
+        </div>
+    </body>
+    </html>

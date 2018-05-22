@@ -1,0 +1,34 @@
+<html>
+ <head>
+  <title> new document </title>
+<script>
+function SetValue()
+{
+ var fm = document.MyForm;
+ alert(fm.getVal.options[fm.getVal.selectedIndex].value);
+ alert(fm.getVal.options[fm.getVal.selectedIndex].text);
+}
+</script>
+ </head>
+ <body>
+<form name='MyForm'>
+
+<select name='pointInput'>
+        <optgroup label="벌점">
+                <option value="-5">타호실 무단 취침</option>
+                <option value="-5">취침시간 소란</option>
+                <option value="-5">무단외출</option>
+                <option value="-5">무단입실</option>
+            </optgroup>
+            <optgroup label="상점">
+                <option value="0.5">공동구역 모범 청소</option>
+                <option value="0.5">호실청소</option>
+            </optgroup>
+</select>
+
+<br>
+<br>
+<input type='button' value='값체크' onclick='javascript:SetValue();'>
+</form>
+ </body>
+</html>

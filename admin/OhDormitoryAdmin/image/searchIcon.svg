@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="3271.656 1310 28.344 28.344">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fcd465;
+      }
+
+      .cls-2 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="baseline-search-24px" transform="translate(3271.656 1310)">
+    <path id="패스_1" data-name="패스 1" class="cls-1" d="M17.763,15.991H16.83l-.331-.319a7.688,7.688,0,1,0-.827.827l.319.331v.933L21.9,23.656l1.76-1.76Zm-7.086,0a5.315,5.315,0,1,1,5.315-5.315A5.307,5.307,0,0,1,10.677,15.991Z" transform="translate(0.543 0.543)"/>
+    <path id="패스_2" data-name="패스 2" class="cls-2" d="M0,0H28.344V28.344H0Z"/>
+  </g>
+</svg>
