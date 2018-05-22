@@ -245,3 +245,7 @@ CREATE TABLE wash_applying_user(
 
 INSERT INTO wash_applying_user VALUES(null, 2, 5, 7, 'test');
 INSERT INTO wash_applying_user VALUES(null, 2, 4, 6, 'test2');
+
+DELETE FROM wash_applying_user WHERE emirim_id LIKE 'test2';
+
+delete from student where name like '°í±æµ¿';
