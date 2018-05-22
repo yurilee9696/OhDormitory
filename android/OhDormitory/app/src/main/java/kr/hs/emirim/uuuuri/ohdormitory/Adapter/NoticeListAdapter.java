@@ -32,7 +32,6 @@ import kr.hs.emirim.uuuuri.ohdormitory.Activity.NoticeDetailActivity;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.BasicNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.CleanNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice2;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.NoticeKind;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.SleepOut;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.SleepoutNotice;

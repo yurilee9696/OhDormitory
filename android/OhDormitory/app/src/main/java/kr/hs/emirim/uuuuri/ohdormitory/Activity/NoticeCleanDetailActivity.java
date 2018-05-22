@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import kr.hs.emirim.uuuuri.ohdormitory.Model.CleanNotice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice2;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 public class NoticeCleanDetailActivity extends AppCompatActivity {

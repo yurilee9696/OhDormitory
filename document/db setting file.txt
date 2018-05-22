@@ -114,6 +114,8 @@ CREATE TABLE user_score(
 INSERT INTO user_score VALUES(null, 'test', '2018-05-21', 0);
 INSERT INTO user_score VALUES(null, 'test', '2018-05-20', 2);
 
+INSERT INTO user_score VALUES(null, 'test2', '2018-05-20', 2);
+
 CREATE TABLE score_detail(
 	score_id INT(2) NOT NULL,
 	detail VARCHAR(20) NOT NULL,
@@ -168,3 +170,78 @@ INSERT INTO score_detail VALUES(38, "기타 가산점", 0.5);
 
 INSERT INTO score_detail VALUES(39, "층장 활동", 1.0);
 INSERT INTO score_detail VALUES(40, "기숙사 행사 도움", 1.0);
+
+
+CREATE TABLE wash_existing_user(
+	wash_day INT(1) NOT NULL,
+	washer_num INT(1) NOT NULL,
+	wash_time INT(1) NOT NULL,
+	using_room INT(3) NOT NULL
+);
+
+#wash_day : 세탁요일 (0~6)
+#washer_num : 세탁기 번호 ( 0~5 ) 4층부터 차례로 +1
+#wash_time : [ 06:00~07:00 => 0, 07:00~08:00 => 1, 08:00~09:00 => 2, 09:00~10:00 => 3, 10:00~11:00 => 4, 11:00~12:00 => 5, 20:00~21:30 => 6, 21:30~22:30 => 7, 22:30~23:30 => 8 ]
+
+요일	세탁기	시간	사용방
+#필수
+INSERT INTO wash_existing_user VALUES(0, 0, 7, 401);
+INSERT INTO wash_existing_user VALUES(0, 0, 8, 404);
+INSERT INTO wash_existing_user VALUES(0, 1, 7, 407);
+INSERT INTO wash_existing_user VALUES(0, 2, 7, 403);
+INSERT INTO wash_existing_user VALUES(0, 2, 8, 414);
+
+INSERT INTO wash_existing_user VALUES(1, 0, 7, 405);
+INSERT INTO wash_existing_user VALUES(1, 0, 8, 408);
+INSERT INTO wash_existing_user VALUES(1, 1, 7, 406);
+INSERT INTO wash_existing_user VALUES(1, 2, 7, 407);
+INSERT INTO wash_existing_user VALUES(1, 2, 8, 415);
+
+INSERT INTO wash_existing_user VALUES(2, 0, 7, 409);
+INSERT INTO wash_existing_user VALUES(2, 0, 8, 412);
+INSERT INTO wash_existing_user VALUES(2, 1, 7, 410);
+INSERT INTO wash_existing_user VALUES(2, 2, 7, 411);
+INSERT INTO wash_existing_user VALUES(2, 2, 8, 416);
+
+INSERT INTO wash_existing_user VALUES(3, 0, 7, 413);
+INSERT INTO wash_existing_user VALUES(3, 1, 8, 417);
+INSERT INTO wash_existing_user VALUES(3, 2, 8, 418);
+
+-------------------------------------------------------
+
+INSERT INTO wash_existing_user VALUES(0, 3, 7, 508);
+INSERT INTO wash_existing_user VALUES(0, 3, 8, 501);
+INSERT INTO wash_existing_user VALUES(0, 4, 7, 509);
+INSERT INTO wash_existing_user VALUES(0, 4, 8, 510);
+INSERT INTO wash_existing_user VALUES(0, 5, 8, 502);
+
+INSERT INTO wash_existing_user VALUES(1, 3, 7, 511);
+INSERT INTO wash_existing_user VALUES(1, 3, 8, 503);
+INSERT INTO wash_existing_user VALUES(1, 4, 7, 512);
+INSERT INTO wash_existing_user VALUES(1, 4, 8, 513);
+INSERT INTO wash_existing_user VALUES(1, 5, 8, 504);
+
+INSERT INTO wash_existing_user VALUES(2, 3, 7, 514);
+INSERT INTO wash_existing_user VALUES(2, 3, 8, 505);
+INSERT INTO wash_existing_user VALUES(2, 4, 7, 515);
+INSERT INTO wash_existing_user VALUES(2, 4, 8, 516);
+INSERT INTO wash_existing_user VALUES(2, 5, 8, 506);
+
+INSERT INTO wash_existing_user VALUES(3, 3, 8, 507);
+INSERT INTO wash_existing_user VALUES(3, 4, 7, 517);
+INSERT INTO wash_existing_user VALUES(3, 4, 8, 518);
+INSERT INTO wash_existing_user VALUES(3, 5, 8, 519);
+
+
+
+CREATE TABLE wash_applying_user(
+	wash_id BIGINT(20) unsigned NOT NULL auto_increment,
+	wash_day INT(1) NOT NULL,
+	washer_num INT(1) NOT NULL,
+	wash_time INT(1) NOT NULL,
+	emirim_id VARCHAR(20) NOT NULL,
+	PRIMARY KEY (wash_id)
+);
+
+INSERT INTO wash_applying_user VALUES(null, 2, 5, 7, 'test');
+INSERT INTO wash_applying_user VALUES(null, 2, 4, 6, 'test2');
