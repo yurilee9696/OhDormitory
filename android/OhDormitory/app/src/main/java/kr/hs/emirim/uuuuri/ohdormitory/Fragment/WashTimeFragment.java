@@ -3,6 +3,7 @@ package kr.hs.emirim.uuuuri.ohdormitory.Fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -126,8 +127,8 @@ public class WashTimeFragment extends Fragment implements Day{
         else
             mApplyBtn.setVisibility(View.INVISIBLE);
 
-        //TODO REMOVE UNDER LINE;
-        mApplyBtn.setVisibility(View.VISIBLE);
+        //TODO REMOVE UNDER LINE - just Debugging;
+//        mApplyBtn.setVisibility(View.VISIBLE);
 
         mApplyBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -227,7 +228,7 @@ public class WashTimeFragment extends Fragment implements Day{
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.HOUR, 20);
         today =  calendar.getTime();
-        Log.e("TODAY", String.valueOf(today));
+       // Log.e("TODAY", String.valueOf(today));
         try {
             firstStartTime = dateTimeFormat.parse(nowDate+" 05:30");
             firstEndTime = dateTimeFormat.parse(nowDate + " 08:00");
@@ -275,6 +276,10 @@ public class WashTimeFragment extends Fragment implements Day{
     // 신청 다이얼로그
     private void applyDialog() {
         final Dialog dialog = new Dialog(view.getContext(), R.style.MyDialog);
+
+        // TODO REMOVE UNDER LINE - just DEBUGGING;
+//        isPossibleTime = true;
+
         if(isPossibleTime){
             String address = null;
             washTime = -1;
@@ -303,6 +308,10 @@ public class WashTimeFragment extends Fragment implements Day{
                     @Override
                     public void onClick(View view) {
                         // TODO delete..
+                        Log.e(TAG, "DELETE");
+                        //Activity mActivity, String urlAddress, int washer_num, int wash_time, String emirim_id, boolean isInsert
+                        Sender s = new Sender(view.getContext(), "http://54.203.113.95/updateWashList.php", 0, 0,mUser.getEmirim_id(),false);
+                        s.execute();
 
                         mApplyText.setText("신  청");
                         dialog.dismiss();
@@ -322,8 +331,6 @@ public class WashTimeFragment extends Fragment implements Day{
                         +"세탁을 예약하시겠습니까?");
                 dialog.show();
 
-                Log.e(TAG, washerType+"/"+washTime);
-
                 final int finalWashTime = washTime;
                 final int finalWasherType = washerType;
                 dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
@@ -333,6 +340,19 @@ public class WashTimeFragment extends Fragment implements Day{
                         washer[finalWashTime][finalWasherType] = new WashUser(-2, -2, finalWashTime, finalWasherType, mUser.getRoom_num()+"호 "+mUser.getName());
 
                         // insert
+                        //Activity mActivity, String urlAddress, int washer_num, int wash_time, String emirim_id, boolean isInsert
+                        int washer_num ;
+                        if(mUser.getRoom_num()/100 == 4)
+                            washer_num = finalWasherType;
+                        else
+                            washer_num = finalWasherType+3;
+
+                        Log.e(TAG, "INSERT");
+
+                        Sender s = new Sender(view.getContext(), "http://54.203.113.95/updateWashList.php", washer_num, getTimeType()*3+finalWasherType,mUser.getEmirim_id(),true);
+                        s.execute();
+
+                        mApplyText.setText("취  소");
 
                         setAlarm();
                         dialog.dismiss();
@@ -385,8 +405,10 @@ public class WashTimeFragment extends Fragment implements Day{
         Iterator<WashUser> iterator = mWashUserSet.iterator();
 
         while(iterator.hasNext()){
-            if(iterator.next().getUser().equals(mUser.getRoom_num()+"호 "+mUser.getName()))
+            if(iterator.next().getUser().equals(mUser.getRoom_num()+"호 "+mUser.getName())){
+                mApplyText.setText("취  소");
                 return mUser.toString();
+            }
         }
 
         return null;
@@ -399,7 +421,7 @@ public class WashTimeFragment extends Fragment implements Day{
         // 현재시간을 date 변수에 저장한다.
 
         Date date = new Date(now);
-        Log.e(TAG, date.getTime()+"/"+Long.valueOf(date.getTime()).getClass().getName());
+
         SimpleDateFormat sdfNow = new SimpleDateFormat("HH");
         int time = Integer.parseInt(sdfNow.format(new Date(System.currentTimeMillis())));
 
@@ -428,10 +450,8 @@ public class WashTimeFragment extends Fragment implements Day{
 
     // 사용자 show dialog
     private void showUsingName(int i , int j){
-        Log.e(TAG, "다이얼로그");
         if(washer[i][j] == null)
             return;
-        Log.e(TAG, "띄울겨?");
 
         final Dialog dialog = new Dialog(view.getContext(), R.style.MyDialog);
         dialog.setContentView(R.layout.dialog_style2);
@@ -515,7 +535,7 @@ public class WashTimeFragment extends Fragment implements Day{
                 }
 
 
-                Log.e(TAG, mWashUserSet.toString());
+               // Log.e(TAG, mWashUserSet.toString());
             } catch (JSONException e) {
 
                 Log.e(TAG, "에러 : "+e.toString());
@@ -543,7 +563,6 @@ public class WashTimeFragment extends Fragment implements Day{
                 continue;
 
             int timeType = getTimeType();
-            Log.e(TAG, timeType+"/"+washUser.getWash_time());
             // timeType : 0 (06:00~09:00 [0~2]) / 1 (09:00~12:00 [3~5]) / 2 (20:00~23:30 [6~8])
             if((timeType == 0 && washUser.getWash_time() > 2) || (timeType==1 && (washUser.getWash_time() <3 || washUser.getWash_time()>5)) || (timeType == 2 && washUser.getWash_time() < 6))
                 continue;
@@ -561,7 +580,7 @@ public class WashTimeFragment extends Fragment implements Day{
     // 세탁 신청
     class Sender extends AsyncTask<Void,Void,String> {
 
-        Activity mActivity;
+        Context mActivity;
 
         String urlAddress;
 
@@ -574,7 +593,7 @@ public class WashTimeFragment extends Fragment implements Day{
             2.RECEIVE CONTEXT,URL ADDRESS AND EDITTEXTS FROM OUR MAINACTIVITY
         */
 
-        public Sender(Activity mActivity, String urlAddress, int washer_num, int wash_time, String emirim_id, boolean isInsert ) {
+        public Sender(Context mActivity, String urlAddress, int washer_num, int wash_time, String emirim_id, boolean isInsert ) {
             this.mActivity = mActivity;
             this.urlAddress = urlAddress;
             this.washer_num = washer_num;
@@ -608,14 +627,14 @@ public class WashTimeFragment extends Fragment implements Day{
             if(response != null)
             {
                 //SUCCESS
-                Toast.makeText(mActivity.getApplicationContext(),"세탁 신청 성공",Toast.LENGTH_LONG).show();
+                Toast.makeText(mActivity.getApplicationContext(),"요청이 성공적으로 처리되었습니다.",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(mActivity, MainActivity.class);
                 mActivity.startActivity(intent);
 
             }else
             {
                 //NO SUCCESS
-                Toast.makeText(mActivity.getApplicationContext(),"세탁 신청 실패",Toast.LENGTH_LONG).show();
+                Toast.makeText(mActivity.getApplicationContext(),"요청을 처리하는데 문제가 발생하였습니다.\n다시 시도해주세요.",Toast.LENGTH_LONG).show();
             }
         }
 
