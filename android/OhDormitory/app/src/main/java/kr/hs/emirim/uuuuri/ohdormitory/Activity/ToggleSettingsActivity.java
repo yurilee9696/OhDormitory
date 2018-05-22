@@ -41,7 +41,7 @@ public class ToggleSettingsActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                     Toast.makeText(getApplicationContext(), "ON", Toast.LENGTH_SHORT).show();
-                mInputSettingsRef.child("alarm").child(getUid()).child("clean").setValue(isChecked);
+//                mInputSettingsRef.child("alarm").child(getUid()).child("clean").setValue(isChecked);
             }
         });
 
@@ -50,7 +50,7 @@ public class ToggleSettingsActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                     Toast.makeText(getApplicationContext(), "ON", Toast.LENGTH_SHORT).show();
-                mInputSettingsRef.child("alarm").child(getUid()).child("laundry").setValue(isChecked);
+//                mInputSettingsRef.child("alarm").child(getUid()).child("laundry").setValue(isChecked);
             }
         });
 
@@ -59,7 +59,7 @@ public class ToggleSettingsActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                     Toast.makeText(getApplicationContext(), "ON", Toast.LENGTH_SHORT).show();
-                mInputSettingsRef.child("alarm").child(getUid()).child("sleep_out").setValue(isChecked);
+//                mInputSettingsRef.child("alarm").child(getUid()).child("sleep_out").setValue(isChecked);
             }
         });
     }
@@ -74,39 +74,39 @@ public class ToggleSettingsActivity extends BaseActivity {
     }
 
     private void setBeforeSettings() {
-        showProgressDialog();
-        mSettingsRef = mDatabase.getReference("alarm/"+getUid()); // get database reference
-
-        mSettingsListener = mSettingsRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot uid) {
-                boolean clean = true;
-                boolean laundry = true;
-                boolean sleepOut = true;
-                if(uid.child("clean").getValue()!=null)
-                    clean =(boolean) uid.child("clean").getValue();
-
-                if(uid.child("laundry").getValue()!= null)
-                       laundry = (boolean)uid.child("laundry").getValue() ;
-
-                if(uid.child("sleep_out").getValue()!= null)
-                    sleepOut = (boolean) uid.child("sleep_out").getValue();
-
-                cleanSwitch.setChecked(clean);
-                laundrySwitch.setChecked(laundry);
-                sleepOutSwitch.setChecked(sleepOut);
-
-                hideProgressDialog();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                cleanSwitch.setChecked(true);
-                laundrySwitch.setChecked(true);
-                sleepOutSwitch.setChecked(true);
-                hideProgressDialog();
-            }
-        });
+//        showProgressDialog();
+//        mSettingsRef = mDatabase.getReference("alarm/"+getUid()); // get database reference
+//
+//        mSettingsListener = mSettingsRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot uid) {
+//                boolean clean = true;
+//                boolean laundry = true;
+//                boolean sleepOut = true;
+//                if(uid.child("clean").getValue()!=null)
+//                    clean =(boolean) uid.child("clean").getValue();
+//
+//                if(uid.child("laundry").getValue()!= null)
+//                       laundry = (boolean)uid.child("laundry").getValue() ;
+//
+//                if(uid.child("sleep_out").getValue()!= null)
+//                    sleepOut = (boolean) uid.child("sleep_out").getValue();
+//
+//                cleanSwitch.setChecked(clean);
+//                laundrySwitch.setChecked(laundry);
+//                sleepOutSwitch.setChecked(sleepOut);
+//
+//                hideProgressDialog();
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                cleanSwitch.setChecked(true);
+//                laundrySwitch.setChecked(true);
+//                sleepOutSwitch.setChecked(true);
+//                hideProgressDialog();
+//            }
+//        });
 
 
     }
