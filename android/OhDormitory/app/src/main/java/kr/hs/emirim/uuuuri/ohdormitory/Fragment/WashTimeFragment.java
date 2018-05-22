@@ -126,6 +126,8 @@ public class WashTimeFragment extends Fragment implements Day{
         else
             mApplyBtn.setVisibility(View.INVISIBLE);
 
+        //TODO REMOVE UNDER LINE;
+        mApplyBtn.setVisibility(View.VISIBLE);
 
         mApplyBtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -272,92 +274,92 @@ public class WashTimeFragment extends Fragment implements Day{
 
     // 신청 다이얼로그
     private void applyDialog() {
-//        final Dialog dialog = new Dialog(view.getContext(), R.style.MyDialog);
-//        if(isPossibleTime){
-//            String address = null;
-//            washTime = -1;
-//            washerType = -1;
-//
-//            searchPossibleWasher();
-//            if(washTime == -1 && washerType == -1){
-//                dialog.setContentView(R.layout.dialog_style2);
-//                ((TextView)dialog.findViewById(R.id.dialog_text)).setText("사용가능한 세탁기가 없습니다.");
-//                dialog.show();
-//                dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//            }else if((address = checkApply())!=null){
-//                dialog.setContentView(R.layout.dialog_style3);
-//                ((TextView)dialog.findViewById(R.id.message)).setText("취소하시겠습니까?");
-//
-//                dialog.show();
-//
-//                final String finalAddress = address;
-//                dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        mCancelRef = mDatabase.getReference(finalAddress);
-//                        mCancelRef.setValue(null);
-//                        mApplyText.setText("신  청");
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//                dialog.findViewById(R.id.dialog_button_no).setOnClickListener(new View.OnClickListener(){
-//                    @Override
-//                    public void onClick(View view) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//            }else{
-//                dialog.setContentView(R.layout.dialog_style3);
-//                ((TextView)dialog.findViewById(R.id.message)).setText((washerType+1)+"번 세탁기 "
-//                        +mTimes.get(washTime)+"\n"+mRoomNumber[mUser.getRoomNumber()]+"호 "+ mUser.getName()+"\n\n"
-//                        +"세탁을 예약하시겠습니까?");
-//                dialog.show();
-//
-//                final int finalWashTime = washTime;
-//                final int finalWasherType = washerType;
-//                dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        washer[finalWashTime][finalWasherType] = mUser;
-//
-//                        mInputRef = mDatabase.getReference();
-//                        mInputRef.child("wash-time").child(nowDate).child("floor_"+mFloor)
-//                                .child("type_"+getTimeType()).child("washer_"+finalWasherType)
-//                                .child(String.valueOf(finalWashTime)).setValue(mUser);
-//
-//                        setAlarm();
-//                        dialog.dismiss();
-//
-//                    }
-//                });
-//
-//                dialog.findViewById(R.id.dialog_button_no).setOnClickListener(new View.OnClickListener(){
-//                    @Override
-//                    public void onClick(View view) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//            }
-//        }else{
-//            dialog.setContentView(R.layout.dialog_style2);
-//            ((TextView)dialog.findViewById(R.id.dialog_text)).setText("세탁기 사용시간이 아닙니다.");
-//            dialog.show();
-//            dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    dialog.dismiss();
-//                }
-//            });
-//        }
-//
+        final Dialog dialog = new Dialog(view.getContext(), R.style.MyDialog);
+        if(isPossibleTime){
+            String address = null;
+            washTime = -1;
+            washerType = -1;
+
+            searchPossibleWasher();
+            if(washTime == -1 && washerType == -1){
+                dialog.setContentView(R.layout.dialog_style2);
+                ((TextView)dialog.findViewById(R.id.dialog_text)).setText("사용가능한 세탁기가 없습니다.");
+                dialog.show();
+                dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+            }else if((address = checkApply())!=null){
+                dialog.setContentView(R.layout.dialog_style3);
+                ((TextView)dialog.findViewById(R.id.message)).setText("취소하시겠습니까?");
+
+                dialog.show();
+
+                final String finalAddress = address;
+                dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO delete..
+
+                        mApplyText.setText("신  청");
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.findViewById(R.id.dialog_button_no).setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+            }else{
+                dialog.setContentView(R.layout.dialog_style3);
+                ((TextView)dialog.findViewById(R.id.message)).setText((washerType+1)+"번 세탁기 "
+                        +mTimes.get(washTime)+"\n"+mUser.getRoom_num()+"호 "+ mUser.getName()+"\n\n"
+                        +"세탁을 예약하시겠습니까?");
+                dialog.show();
+
+                Log.e(TAG, washerType+"/"+washTime);
+
+                final int finalWashTime = washTime;
+                final int finalWasherType = washerType;
+                dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO CHANGE
+                        washer[finalWashTime][finalWasherType] = new WashUser(-2, -2, finalWashTime, finalWasherType, mUser.getRoom_num()+"호 "+mUser.getName());
+
+                        // insert
+
+                        setAlarm();
+                        dialog.dismiss();
+
+                    }
+                });
+
+                dialog.findViewById(R.id.dialog_button_no).setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+            }
+        }else{
+            dialog.setContentView(R.layout.dialog_style2);
+            ((TextView)dialog.findViewById(R.id.dialog_text)).setText("세탁기 사용시간이 아닙니다.");
+            dialog.show();
+            dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+        }
+
     }
 
     private void setAlarm() {
@@ -380,18 +382,13 @@ public class WashTimeFragment extends Fragment implements Day{
     // 이전에 신청했는지 check
     private String checkApply() {
 
-        String address = "wash-time/" + nowDate + "/floor_" + mFloor + "/type_" + getTimeType();
-        String childName = "washer_";
+        Iterator<WashUser> iterator = mWashUserSet.iterator();
 
-        for(int i = 0; i<washer.length; i++){
-            for(int j = 0; j<washer[0].length; j++){
-
-                if (washer[i][j] != null && washer[i][j].toString().equals(mUser.toString())) {
-                    Log.e(TAG, washer[i][j].equals(mUser)+"");
-                    return address+"/"+childName+i+"/"+j;
-                }
-            }
+        while(iterator.hasNext()){
+            if(iterator.next().getUser().equals(mUser.getRoom_num()+"호 "+mUser.getName()))
+                return mUser.toString();
         }
+
         return null;
     }
 
@@ -571,17 +568,19 @@ public class WashTimeFragment extends Fragment implements Day{
         private int washer_num;
         private int wash_time;
         private String emirim_id;
+        private boolean isInsert;
         /*
             1.OUR CONSTRUCTOR
             2.RECEIVE CONTEXT,URL ADDRESS AND EDITTEXTS FROM OUR MAINACTIVITY
         */
 
-        public Sender(Activity mActivity, String urlAddress, int washer_num, int wash_time, String emirim_id) {
+        public Sender(Activity mActivity, String urlAddress, int washer_num, int wash_time, String emirim_id, boolean isInsert ) {
             this.mActivity = mActivity;
             this.urlAddress = urlAddress;
             this.washer_num = washer_num;
             this.wash_time = wash_time;
             this.emirim_id = emirim_id;
+            this.isInsert = isInsert;
         }
 
         /*
@@ -640,8 +639,8 @@ public class WashTimeFragment extends Fragment implements Day{
 
                 //WRITE
                 BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
-                // TODO
-                bw.write(new UserDataPacker(washer_num, wash_time, emirim_id).packUserData());
+
+                bw.write(new UserDataPacker(washer_num, wash_time, emirim_id, isInsert).packUserData());
 
                 bw.flush();
 
@@ -690,12 +689,14 @@ public class WashTimeFragment extends Fragment implements Day{
         private int washer_num;
         private int wash_time;
         private String emirim_id;
+        private boolean isInsert;
 
 
-        public UserDataPacker(int washer_num, int wash_time, String emirim_id) {
+        public UserDataPacker(int washer_num, int wash_time, String emirim_id, boolean isInsert) {
             this.washer_num = washer_num;
             this.wash_time = wash_time;
             this.emirim_id = emirim_id;
+            this.isInsert = isInsert;
         }
 
         public String packUserData(){
@@ -706,6 +707,7 @@ public class WashTimeFragment extends Fragment implements Day{
                 jo.put("washer_num", washer_num);
                 jo.put("wash_time", wash_time);
                 jo.put("emirim_id", emirim_id);
+                jo.put("isInsert", isInsert);
 
                 Boolean firstValue = true;
 

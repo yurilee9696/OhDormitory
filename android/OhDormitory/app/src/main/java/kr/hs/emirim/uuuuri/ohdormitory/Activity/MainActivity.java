@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
         final int[] ICONS = new int[]{
                 R.drawable.tab1,
                 R.drawable.tab2,
-                R.drawable.tab3};
+                R.drawable.tab3
+        };
 
         // tabLayout.addTab(tabLayout.newTab().setText("Tab One"));
         tabLayout.addTab(tabLayout.newTab().setIcon(ICONS[0]));
