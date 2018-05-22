@@ -4,6 +4,7 @@
         height: 60px;
         background-color: #FCD465;
         position: fixed;
+        box-shadow: 0px 3px 11px rgba(0, 0, 0, 0.13);
     }
     #logo{
         margin-top: 10px;

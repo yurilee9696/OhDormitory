@@ -20,4 +20,12 @@ public class Score {
         this.detail = detail;
         this.score = score;
     }
+
+    @Override
+    public String toString() {
+        return "Score{" +
+                "detail='" + detail + '\'' +
+                ", score=" + score +
+                '}';
+    }
 }
