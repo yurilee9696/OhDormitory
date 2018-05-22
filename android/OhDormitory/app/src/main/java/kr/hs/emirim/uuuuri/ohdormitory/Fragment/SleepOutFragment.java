@@ -208,12 +208,15 @@ public class SleepOutFragment extends Fragment {
 
                     JSONArray recordJson = jsonObject.getJSONArray(TAG_JSON_R);
                     JSONObject recordItem = recordJson.getJSONObject(0);
+                    Log.e(TAG,"recognize : "+recordItem.getString("recognize"));
+
+                    mTextDate.setText(noticeItem.getString("sleep_w_time") + " ~ " + noticeItem.getString("sleep_d_time"));
+
+                    mTextMessage.setText("인증 연락처 : ");
+                    mTextParentCall.setText(mUser.getParent_phone());
 
                     if(recordItem.getString("recognize").equals("0")) {//아직 인증 안받음
-                        mTextDate.setText(noticeItem.getString("sleep_w_time") + " ~ " + noticeItem.getString("sleep_d_time"));
 
-                        mTextMessage.setText("인증 연락처 : ");
-                        mTextParentCall.setText(mUser.getParent_phone());
                         mTextRecognize.setText("미인증");
                         mCameraBtn.setVisibility(View.VISIBLE);
                         mCameraBtn.setOnClickListener(new View.OnClickListener() {
@@ -224,10 +227,7 @@ public class SleepOutFragment extends Fragment {
                             }
                         });
                     }else{
-                        mTextDate.setText("");
-                        mTextMessage.setText("이미 인증받았습니다.");
-                        mTextParentCall.setText("");
-                        mTextRecognize.setText("");
+                        mTextRecognize.setText("이미 인증받았습니다.");
                         mCameraBtn.setVisibility(View.GONE);
 
 
