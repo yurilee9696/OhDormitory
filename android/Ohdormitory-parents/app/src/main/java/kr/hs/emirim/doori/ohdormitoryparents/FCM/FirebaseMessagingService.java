@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.RemoteMessage;
 
-import kr.hs.emirim.doori.ohdormitoryparents.MainActivity;
+import kr.hs.emirim.doori.ohdormitoryparents.Activity.MainActivity;
 
 import static kr.hs.emirim.doori.ohdormitoryparents.R.mipmap.ic_launcher;
 

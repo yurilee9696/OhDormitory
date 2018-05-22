@@ -1,4 +1,4 @@
-package kr.hs.emirim.doori.ohdormitoryparents;
+package kr.hs.emirim.doori.ohdormitoryparents.Activity;
 
 import android.app.ProgressDialog;
 import android.support.annotation.VisibleForTesting;
