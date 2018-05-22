@@ -1,7 +1,6 @@
 package kr.hs.emirim.uuuuri.ohdormitory.Adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Score;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.StudentScore;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.UserScore;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 

@@ -1,8 +1,12 @@
 package kr.hs.emirim.uuuuri.ohdormitory.Fragment;
 
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -12,18 +16,46 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
+import kr.hs.emirim.uuuuri.ohdormitory.Activity.MainActivity;
+import kr.hs.emirim.uuuuri.ohdormitory.Activity.ModifyPwdActivity;
+import kr.hs.emirim.uuuuri.ohdormitory.Adapter.Connector;
 import kr.hs.emirim.uuuuri.ohdormitory.Adapter.NotificationAdapter;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.BasicNotice;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.CleanNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Day;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.NoticeKind;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.SleepoutNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
+import kr.hs.emirim.uuuuri.ohdormitory.Model.WashUser;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -52,10 +84,9 @@ public class WashTimeFragment extends Fragment implements Day{
 
     private User mUser;
     private int mFloor;
-    private int mRoomNumber[];
     private String nowDate;
 
-    private User washer[][] = {
+    private WashUser washer[][] = {
             {null, null, null},
             {null, null, null},
             {null, null, null}
@@ -72,7 +103,7 @@ public class WashTimeFragment extends Fragment implements Day{
     private boolean isPossibleTime = true;
 
     private ArrayList<String> mTimes;
-
+    private Set<WashUser> mWashUserSet;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view =inflater.inflate(R.layout.wash_time_fragment, container, false);
@@ -80,18 +111,12 @@ public class WashTimeFragment extends Fragment implements Day{
         notificationAdapter = new NotificationAdapter(getActivity(), getContext());
         dateTimeFormat = new  SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.getDefault());
 
-        mRoomNumber = new int[]{401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418,
-                501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519};
-
         initLinear();
-
-
 
         getUserInfo(); // mUser 할당
 
         setWashingTime();
-        setWeekDayUser();
-        setWasherUser();
+        setExistingUser();
 
         mApplyBtn =  view.findViewById(R.id.application_button);
         mApplyText = view.findViewById(R.id.application_text);
@@ -192,8 +217,6 @@ public class WashTimeFragment extends Fragment implements Day{
         Date thirdStartTime = null;
         Date thirdEndTime = null;
 
-// TODO: 2017-10-22 : TEST CODE
-//        Date today = new Date(System.currentTimeMillis());
         Date today = new Date(System.currentTimeMillis());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
@@ -215,165 +238,37 @@ public class WashTimeFragment extends Fragment implements Day{
             e.printStackTrace();
         }
 
-        return 2;
-        //// TODO: 2017-10-23  TEST [끝나고 주석 지우셈]
-//        if(week == SUNDAY || week == SATURDAY){ // 1 ~ 7 일요일 ~ 토요일
-//            if(today.after(firstStartTime) && today.before(firstEndTime)){
-//                return 0;
-//            }
-//            else if(today.after(secondStartTime) && today.before(secondEndTime)){
-//                return 1;
-//            }else if(today.after(thirdStartTime) && today.before(thirdEndTime)){
-//                return 2;
-//            }else {
-//                isPossibleTime = false;
-//                return 2;
-//            }
-//        }else{
-//
-//            if(today.after(thirdStartTime)&&today.before(thirdEndTime)){
-//                return 2;
-//            }else{
-//                isPossibleTime = false;
-//                return 2;
-//            }
-//        }
+
+        if(week == SUNDAY || week == SATURDAY){ // 1 ~ 7 일요일 ~ 토요일
+            if(today.after(firstStartTime) && today.before(firstEndTime)){
+                return 0;
+            }
+            else if(today.after(secondStartTime) && today.before(secondEndTime)){
+                return 1;
+            }else if(today.after(thirdStartTime) && today.before(thirdEndTime)){
+                return 2;
+            }else {
+                isPossibleTime = false;
+                return 2;
+            }
+        }else{
+
+            if(today.after(thirdStartTime)&&today.before(thirdEndTime)){
+                return 2;
+            }else{
+                isPossibleTime = false;
+                return 2;
+            }
+        }
     }
 
-    //주중 사용자 set
-    private void setWeekDayUser() {
-//        Calendar cal = Calendar.getInstance();
-//        int week = cal.get(Calendar.DAY_OF_WEEK);
-//
-//        DatabaseReference timeTypeRef = mDatabase.getReference().child("wash-time").child(nowDate).child("floor_"+mFloor)
-//                .child("type_"+getTimeType());
-//
-//        if(mFloor == 4){
-//            switch(week){
-//                case MONDAY:
-//                    timeTypeRef.child("washer_0").child("1").setValue(new User2(401));
-//                    timeTypeRef.child("washer_0").child("2").setValue(new User2(404));
-//
-//                    timeTypeRef.child("washer_1").child("1").setValue(new User2(402));
-//
-//                    timeTypeRef.child("washer_2").child("1").setValue(new User2(403));
-//                    timeTypeRef.child("washer_2").child("2").setValue(new User2(414));
-//                    break;
-//                case TUESDAY:
-//                    timeTypeRef.child("washer_0").child("1").setValue(new User2(405));
-//                    timeTypeRef.child("washer_0").child("2").setValue(new User2(408));
-//
-//                    timeTypeRef.child("washer_1").child("1").setValue(new User2(406));
-//
-//                    timeTypeRef.child("washer_2").child("1").setValue(new User2(407));
-//                    timeTypeRef.child("washer_2").child("2").setValue(new User2(415));
-//                    break;
-//                case WEDNESDAY:
-//                    timeTypeRef.child("washer_0").child("1").setValue(new User2(409));
-//                    timeTypeRef.child("washer_0").child("2").setValue(new User2(412));
-//
-//                    timeTypeRef.child("washer_1").child("1").setValue(new User2(410));
-//
-//                    timeTypeRef.child("washer_2").child("1").setValue(new User2(411));
-//                    timeTypeRef.child("washer_2").child("2").setValue(new User2(416));
-//                    break;
-//                case THURSDAY:
-//                    timeTypeRef.child("washer_0").child("1").setValue(new User2(413));
-//
-//                    timeTypeRef.child("washer_1").child("2").setValue(new User2(417));
-//
-//                    timeTypeRef.child("washer_2").child("2").setValue(new User2(418));
-//
-//                    break;
-//                case SATURDAY:
-//                case SUNDAY:
-//                case FRIDAY:
-//                default:
-//                        break;
-//            }
-//        }else if(mFloor == 5){
-//            switch(week){
-//                case MONDAY:
-//                    timeTypeRef.child("washer_0").child("1").setValue(new User2(508));
-//                    timeTypeRef.child("washer_0").child("2").setValue(new User2(501));
-//
-//                    timeTypeRef.child("washer_1").child("1").setValue(new User2(509));
-//                    timeTypeRef.child("washer_1").child("2").setValue(new User2(510));
-//
-//                    timeTypeRef.child("washer_2").child("2").setValue(new User2(502));
-//                    break;
-//                case TUESDAY:
-//                    timeTypeRef.child("washer_0").child("1").setValue(new User2(511));
-//                    timeTypeRef.child("washer_0").child("2").setValue(new User2(503));
-//
-//                    timeTypeRef.child("washer_1").child("1").setValue(new User2(512));
-//                    timeTypeRef.child("washer_1").child("2").setValue(new User2(513));
-//
-//                    timeTypeRef.child("washer_2").child("2").setValue(new User2(504));
-//                    break;
-//                case WEDNESDAY:
-//                    timeTypeRef.child("washer_0").child("1").setValue(new User2(514));
-//                    timeTypeRef.child("washer_0").child("2").setValue(new User2(505));
-//
-//                    timeTypeRef.child("washer_1").child("1").setValue(new User2(515));
-//                    timeTypeRef.child("washer_1").child("2").setValue(new User2(516));
-//
-//                    timeTypeRef.child("washer_2").child("2").setValue(new User2(506));
-//                    break;
-//                case THURSDAY:
-//                    timeTypeRef.child("washer_0").child("2").setValue(new User2(507));
-//
-//                    timeTypeRef.child("washer_1").child("1").setValue(new User2(517));
-//                    timeTypeRef.child("washer_1").child("2").setValue(new User2(518));
-//
-//                    timeTypeRef.child("washer_2").child("2").setValue(new User2(519));
-//                    break;
-//                case FRIDAY:
-//                case SATURDAY:
-//                case SUNDAY:
-//                default:
-//                    break;
-//            }
-//        }
+    // 기존 예약자들 표시
+    private void setExistingUser(){
+        Receiver receiver = new Receiver();
+        receiver.execute("http://54.203.113.95/getWashList.php");
     }
 
-    // 주중 사용자 외 사용자 set - firebase listener
-    private void setWasherUser(){
-//        Log.e(TAG, "wash-time/"+nowDate+"/floor_"+mFloor+"/type_"+getTimeType());
-//        DatabaseReference mWasherRef = mDatabase.getReference("wash-time/" + nowDate + "/floor_" + mFloor + "/type_" + getTimeType());
-//        ValueEventListener washListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot timeType) {
-//                String childName = "washer_";
-//
-//                for(int i = 0; i<washer.length; i++)
-//                    for (int j = 0; j < washer[i].length; j++) {
-//                        if (timeType.child(childName + i).child(String.valueOf(j)).getValue(User.class) == null) {
-//                            Log.e(TAG, "NULL?");
-//                            washer[i][j] = null;
-//                            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) washerLinear[i][j].getLayoutParams();
-//                            params.height = dpToPx(3);
-//                            washerLinear[i][j].setLayoutParams(params);
-//                            washerLinear[i][j].setBackgroundColor(Color.parseColor("#757575"));
-//                        } else {
-//                            washer[i][j] = timeType.child(childName + i).child(String.valueOf(j)).getValue(User2.class);
-//                            if(washer[i][j].toString().equals(mUser.toString())&&isPossibleTime==true) {
-//                                mApplyText.setText("취  소");
-//                            }
-//                            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) washerLinear[i][j].getLayoutParams();
-//                            params.height = dpToPx(7);
-//                            washerLinear[i][j].setLayoutParams(params);
-//                            washerLinear[i][j].setBackgroundColor(Color.parseColor("#9eaec5"));
-//                        }
-//                    }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        };
-//
-//        mWasherRef.addValueEventListener(washListener);
-    }
+
 
     // 신청 다이얼로그
     private void applyDialog() {
@@ -536,21 +431,23 @@ public class WashTimeFragment extends Fragment implements Day{
 
     // 사용자 show dialog
     private void showUsingName(int i , int j){
+        Log.e(TAG, "다이얼로그");
         if(washer[i][j] == null)
             return;
+        Log.e(TAG, "띄울겨?");
 
         final Dialog dialog = new Dialog(view.getContext(), R.style.MyDialog);
         dialog.setContentView(R.layout.dialog_style2);
         String str;
-        if(washer[i][j].getRoom_num() > mRoomNumber.length)
-            str = washer[i][j].getRoom_num() + "호";
-        else
-            str = mRoomNumber[washer[i][j].getRoom_num()] + "호";
 
-        if (washer[i][j].getName() != null)
-            str += " " + washer[i][j].getName() + " 학생이 ";
-        else
-            str += "에서 ";
+
+        str = washer[i][j].getUser();
+        if(washer[i][j].getWash_id() == -1){
+            str += "호에서 ";
+        }else{
+            str+=" 학생이 ";
+        }
+
         ((TextView) dialog.findViewById(R.id.dialog_text)).setText(str + "사용중입니다.");
 
         dialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
@@ -567,6 +464,277 @@ public class WashTimeFragment extends Fragment implements Day{
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+
+    // 세탁일지를 받아옴
+    class Receiver extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            StringBuilder jsonHtml = new StringBuilder();
+            try {
+                URL phpUrl = new URL(params[0]);
+                HttpURLConnection conn = (HttpURLConnection)phpUrl.openConnection();
+
+                if ( conn != null ) {
+                    conn.setConnectTimeout(10000);
+                    conn.setUseCaches(false);
+
+                    if ( conn.getResponseCode() == HttpURLConnection.HTTP_OK ) {
+                        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                        while ( true ) {
+                            String line = br.readLine();
+                            if ( line == null )
+                                break;
+                            jsonHtml.append(line + "\n");
+                        }
+                        br.close();
+                    }
+                    conn.disconnect();
+                }
+            } catch ( Exception e ) {
+                e.printStackTrace();
+            }
+//            Log.e(TAG, "가져온 결과는 ? ? " + jsonHtml.toString());
+            return jsonHtml.toString();
+        }
+
+        protected void onPostExecute(String str) {
+            try {
+                mWashUserSet = new HashSet<WashUser>();
+
+                JSONArray existingUser = new JSONObject(str).getJSONArray("wash_existing_user");
+                for(int i = 0; i<existingUser.length(); i++){
+                    JSONObject job = existingUser.getJSONObject(i);
+                    //int wash_id, int wash_day, int wash_time, int washer_num, String user
+                    mWashUserSet.add(new WashUser(job.optInt("wash_id", -1), job.getInt("wash_day"), job.getInt("wash_time"), job.getInt("washer_num"), job.getString("using_room")));
+                }
+
+                JSONArray applyingUser = new JSONObject(str).getJSONArray("wash_applying_user");
+                for(int i = 0; i<applyingUser.length(); i++){
+                    JSONObject job = applyingUser.getJSONObject(i);
+                    mWashUserSet.add(new WashUser(job.getInt("wash_id"), job.getInt("wash_day"), job.getInt("wash_time"), job.getInt("washer_num"), job.getString("emirim_id")));
+                }
+
+
+                Log.e(TAG, mWashUserSet.toString());
+            } catch (JSONException e) {
+
+                Log.e(TAG, "에러 : "+e.toString());
+            }
+            appearWashUsers();
+        }
+
+    }
+
+    // 화면에 예약된 사용자를 띄워줌
+    private void appearWashUsers() {
+        Iterator<WashUser> iterator = mWashUserSet.iterator();
+
+        for(int i = 0; i<washer.length; i++){
+            for(int j = 0; j<washer[i].length; j++){
+                washer[i][j] = null;
+            }
+        }
+
+        while(iterator.hasNext()){
+            WashUser washUser = iterator.next();
+
+            int floor = mUser.getRoom_num()/100;
+            if((floor == 4 && washUser.getWasher_num()>2)||(floor==5 && washUser.getWasher_num()<3))
+                continue;
+
+            int timeType = getTimeType();
+            Log.e(TAG, timeType+"/"+washUser.getWash_time());
+            // timeType : 0 (06:00~09:00 [0~2]) / 1 (09:00~12:00 [3~5]) / 2 (20:00~23:30 [6~8])
+            if((timeType == 0 && washUser.getWash_time() > 2) || (timeType==1 && (washUser.getWash_time() <3 || washUser.getWash_time()>5)) || (timeType == 2 && washUser.getWash_time() < 6))
+                continue;
+
+//            washer[i][j] = timeType.child(childName + i).child(String.valueOf(j)).getValue(User2.class);
+            washer[washUser.getWasher_num()%3][washUser.getWash_time()%3] = washUser;
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) washerLinear[washUser.getWasher_num()%3][washUser.getWash_time()%3].getLayoutParams();
+            params.height = dpToPx(7);
+            washerLinear[washUser.getWasher_num()%3][washUser.getWash_time()%3].setLayoutParams(params);
+            washerLinear[washUser.getWasher_num()%3][washUser.getWash_time()%3].setBackgroundColor(Color.parseColor("#9eaec5"));
+        }
+
+    }
+
+    // 세탁 신청
+    class Sender extends AsyncTask<Void,Void,String> {
+
+        Activity mActivity;
+
+        String urlAddress;
+
+        private int washer_num;
+        private int wash_time;
+        private String emirim_id;
+        /*
+            1.OUR CONSTRUCTOR
+            2.RECEIVE CONTEXT,URL ADDRESS AND EDITTEXTS FROM OUR MAINACTIVITY
+        */
+
+        public Sender(Activity mActivity, String urlAddress, int washer_num, int wash_time, String emirim_id) {
+            this.mActivity = mActivity;
+            this.urlAddress = urlAddress;
+            this.washer_num = washer_num;
+            this.wash_time = wash_time;
+            this.emirim_id = emirim_id;
+        }
+
+        /*
+   1.SHOW PROGRESS DIALOG WHILE DOWNLOADING DATA
+    */
+
+        /*
+        1.WHERE WE SEND DATA TO NETWORK
+        2.RETURNS FOR US A STRING
+         */
+        @Override
+        protected String doInBackground(Void... params) {
+            return this.send();
+        }
+
+        /*
+      1. CALLED WHEN JOB IS OVER
+      2. WE DISMISS OUR PD
+      3.RECEIVE A STRING FROM DOINBACKGROUND
+       */
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+
+            if(response != null)
+            {
+                //SUCCESS
+                Toast.makeText(mActivity.getApplicationContext(),"세탁 신청 성공",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(mActivity, MainActivity.class);
+                mActivity.startActivity(intent);
+
+            }else
+            {
+                //NO SUCCESS
+                Toast.makeText(mActivity.getApplicationContext(),"세탁 신청 실패",Toast.LENGTH_LONG).show();
+            }
+        }
+
+        /*
+        SEND DATA OVER THE NETWORK
+        RECEIVE AND RETURN A RESPONSE
+         */
+        private String send()
+        {
+            //CONNECT
+            HttpURLConnection con= Connector.connect(urlAddress);
+
+            if(con==null)
+            {
+                return null;
+            }
+
+            try
+            {
+                OutputStream os=con.getOutputStream();
+
+                //WRITE
+                BufferedWriter bw=new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
+                // TODO
+                bw.write(new UserDataPacker(washer_num, wash_time, emirim_id).packUserData());
+
+                bw.flush();
+
+                //RELEASE RES
+                bw.close();
+                os.close();
+
+                //HAS IT BEEN SUCCESSFUL?
+                int responseCode=con.getResponseCode();
+
+                if(responseCode==con.HTTP_OK)
+                {
+                    //GET EXACT RESPONSE
+                    BufferedReader br=new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    StringBuffer response=new StringBuffer();
+
+                    String line;
+
+                    //READ LINE BY LINE
+                    while ((line=br.readLine()) != null)
+                    {
+                        response.append(line);
+                    }
+
+                    //RELEASE RES
+                    br.close();
+
+                    return response.toString();
+
+                }else
+                {
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+    }
+
+    // 서버에 보낼 데이터를 가공
+    class UserDataPacker {
+        private int washer_num;
+        private int wash_time;
+        private String emirim_id;
+
+
+        public UserDataPacker(int washer_num, int wash_time, String emirim_id) {
+            this.washer_num = washer_num;
+            this.wash_time = wash_time;
+            this.emirim_id = emirim_id;
+        }
+
+        public String packUserData(){
+            JSONObject jo = new JSONObject();
+            StringBuffer packedData = new StringBuffer();
+
+            try{
+                jo.put("washer_num", washer_num);
+                jo.put("wash_time", wash_time);
+                jo.put("emirim_id", emirim_id);
+
+                Boolean firstValue = true;
+
+                Iterator it = jo.keys();
+
+                do{
+                    String key = it.next().toString();
+                    String value = jo.get(key).toString();
+
+                    if(firstValue){
+                        firstValue = false;
+                    }else{
+                        packedData.append("&");
+                    }
+
+                    packedData.append(URLEncoder.encode(key, "UTF-8"));
+                    packedData.append("=");
+                    packedData.append(URLEncoder.encode(value, "UTF-8"));
+                }while(it.hasNext());
+
+                return packedData.toString();
+            }catch(JSONException e){
+                e.printStackTrace();
+            }catch(UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 
 }

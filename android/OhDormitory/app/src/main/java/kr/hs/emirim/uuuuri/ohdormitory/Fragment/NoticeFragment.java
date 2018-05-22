@@ -3,7 +3,6 @@ package kr.hs.emirim.uuuuri.ohdormitory.Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,10 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,12 +28,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import kr.hs.emirim.uuuuri.ohdormitory.Activity.SignInActivity;
 import kr.hs.emirim.uuuuri.ohdormitory.Adapter.NoticeListAdapter;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.BasicNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.CleanNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice2;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.NoticeKind;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.SleepoutNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
@@ -58,7 +53,7 @@ public class NoticeFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private ArrayList<Notice> noticeDataset;
 
-    private Sender sender;
+    private Receiver receiver;
     private final String URL = "http://54.203.113.95/getNotice.php";
 
     private User mUser;
@@ -85,14 +80,14 @@ public class NoticeFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
-        sender = new Sender();
-        sender.execute(URL);
+        receiver = new Receiver();
+        receiver.execute(URL);
 
 
         return view;
     }
 
-    class Sender extends AsyncTask<String, Integer, String> {
+    class Receiver extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
