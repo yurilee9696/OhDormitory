@@ -1,10 +1,12 @@
-package kr.hs.emirim.doori.ohdormitoryparents;
+package kr.hs.emirim.doori.ohdormitoryparents.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+
+import kr.hs.emirim.doori.ohdormitoryparents.R;
 
 public class IntroActivity extends AppCompatActivity {
 
