@@ -8,12 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,18 +18,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import kr.hs.emirim.uuuuri.ohdormitory.Adapter.ScoreListAdapater;
-import kr.hs.emirim.uuuuri.ohdormitory.Fragment.NoticeFragment;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.BasicNotice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.CleanNotice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.NoticeKind;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Score;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.SleepoutNotice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.StudentScore;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.User;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.UserScore;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
@@ -244,6 +229,4 @@ public class ScoreActivity extends BaseActivity {
             mTotalText.setText("총 "+ mTotalScore+" 점");
         }
     }
-
-
 }

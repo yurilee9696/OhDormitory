@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "16311010061",
-    "firebase_url": "https://ohdormitory-mirim.firebaseio.com",
-    "project_id": "ohdormitory-mirim",
-    "storage_bucket": "ohdormitory-mirim.appspot.com"
+    "project_number": "356871550536",
+    "firebase_url": "https://ohdormitory-mirim222.firebaseio.com",
+    "project_id": "ohdormitory-mirim222",
+    "storage_bucket": "ohdormitory-mirim222.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:16311010061:android:ea9f448072387047",
+        "mobilesdk_app_id": "1:356871550536:android:57dea96c081a819d",
         "android_client_info": {
-          "package_name": "kr.hs.emirim.uuuuri.ohdormitory"
+          "package_name": "kr.hs.emirim.doori.ohdormitoryparents"
         }
       },
       "oauth_client": [
         {
-          "client_id": "16311010061-krh96099ukftk2akpe77td1bhrj2hnqv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "kr.hs.emirim.uuuuri.ohdormitory",
-            "certificate_hash": "8607ce76aacc4c55adda9bb413adcb15e6fac109"
-          }
-        },
-        {
-          "client_id": "16311010061-2vl45f3mrg3avs7uq1ur0mt492vv5tt8.apps.googleusercontent.com",
+          "client_id": "356871550536-t3cs8p9j409d3hlj3vqm6qf07gsggnmf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDMlH_sI0DewIvCYaW16YqbSphXU4_tjJA"
+          "current_key": "AIzaSyBVwKuZ9Cy-pnm0MVtaatIT7oyqSghdukg"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "16311010061-2vl45f3mrg3avs7uq1ur0mt492vv5tt8.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
@@ -52,20 +39,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:16311010061:android:57dea96c081a819d",
+        "mobilesdk_app_id": "1:356871550536:android:ea9f448072387047",
         "android_client_info": {
-          "package_name": "kr.hs.emirim.doori.ohdormitoryparents"
+          "package_name": "kr.hs.emirim.uuuuri.ohdormitory"
         }
       },
       "oauth_client": [
         {
-          "client_id": "16311010061-2vl45f3mrg3avs7uq1ur0mt492vv5tt8.apps.googleusercontent.com",
+          "client_id": "356871550536-t3cs8p9j409d3hlj3vqm6qf07gsggnmf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDMlH_sI0DewIvCYaW16YqbSphXU4_tjJA"
+          "current_key": "AIzaSyBVwKuZ9Cy-pnm0MVtaatIT7oyqSghdukg"
         }
       ],
       "services": {

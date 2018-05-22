@@ -15,6 +15,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import kr.hs.emirim.uuuuri.ohdormitory.FCM.FirebaseInstanceIDService;
 import kr.hs.emirim.uuuuri.ohdormitory.Fragment.TabPagerAdapter;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
@@ -29,6 +32,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        //push 알람 토큰  database에
+        FirebaseMessaging.getInstance().subscribeToTopic("studentNotice");
+        FirebaseInstanceIDService f=new FirebaseInstanceIDService(getApplicationContext());
+        f.sendRegistrationToServer();
+
+
         // Adding Toolbar to the activity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -39,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
         final int[] ICONS = new int[]{
                 R.drawable.tab1,
                 R.drawable.tab2,
-                R.drawable.tab3};
+                R.drawable.tab3
+        };
 
         // tabLayout.addTab(tabLayout.newTab().setText("Tab One"));
         tabLayout.addTab(tabLayout.newTab().setIcon(ICONS[0]));

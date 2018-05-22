@@ -1,8 +1,10 @@
 package kr.hs.emirim.uuuuri.ohdormitory.Adapter;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +16,15 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import kr.hs.emirim.uuuuri.ohdormitory.Activity.NoticeCleanDetailActivity;
@@ -22,7 +32,6 @@ import kr.hs.emirim.uuuuri.ohdormitory.Activity.NoticeDetailActivity;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.BasicNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.CleanNotice;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice2;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.NoticeKind;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.SleepOut;
 import kr.hs.emirim.uuuuri.ohdormitory.Model.SleepoutNotice;
@@ -48,6 +57,8 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
     User mUser;
 
+    View mView;
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         TextView mTextView_content;
@@ -56,10 +67,11 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         CardView mMyCardView;
         public ViewHolder(View view) {
             super(view);
+            mView=view;
             mTextView_content = (TextView)view.findViewById(R.id.textview_content);
             mTextView_time= (TextView)view.findViewById(R.id.textview_time);
             cardTypeColor = (LinearLayout)view.findViewById(R.id.card_type);
-            mMyCardView = (CardView)view.findViewById(R.id.myCardView);
+            mMyCardView = (CardView) view.findViewById(R.id.myCardView);
         }
     }
 
@@ -123,7 +135,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                         view.getContext().startActivity(intent);
                         break;
                     case NoticeKind.SLEEP_OUT_NOTICE:
-                        showDialog(view, ((SleepoutNotice)mDataset.get(position)).getSleep_w_time(),((SleepoutNotice) mDataset.get(position)).getSleep_d_time());
+                        showDialog(view,((SleepoutNotice) mDataset.get(position)).getNotice_id(), ((SleepoutNotice)mDataset.get(position)).getSleep_w_time(),((SleepoutNotice) mDataset.get(position)).getSleep_d_time());
                         break;
                 }
             }
@@ -136,7 +148,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         return mDataset.size();
     }
 
-    private void showDialog(View view, final String wTime, final String dTime){
+    private void showDialog(View view,final int noticeID, final String wTime, final String dTime){
         final Dialog mDialog = new Dialog(view.getContext(), R.style.MyDialog);
         mDialog.setContentView(R.layout.application_form);
         TextView sleepWTime = mDialog.findViewById(R.id.sleep_w_time);
@@ -172,8 +184,11 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 mCheckDialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //TODO database에 저장
-                        // phoneNumber, dtime, wtime, sleep type
+
+                        GetData task = new GetData();
+
+                        task.execute(String.valueOf(noticeID),mUser.getEmirim_id(),mSleepOut);
+
                         SleepOut sleepOut = new SleepOut(mUser.getParent_phone(), mSleepOut,"false");
                         mCheckDialog.dismiss();
                         mDialog.dismiss();
@@ -191,6 +206,198 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         });
         mDialog.show();
     }
+    private class GetData extends AsyncTask<String, Void, String> {
+
+
+        ProgressDialog progressDialog;
+
+        String errorString = null;
+
+
+        @Override
+
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+
+
+            progressDialog = ProgressDialog.show(mView.getContext(),
+
+                    "잠시만 기다려주세요", null, true, true);
+
+        }
+
+
+
+        @Override
+
+        protected void onPostExecute(String result) {
+
+            super.onPostExecute(result);
+
+
+            progressDialog.dismiss();
+
+
+
+
+            if (result.equals("1")){
+                Log.e(TAG,"성공"+result);
+                final Dialog mCheckDialog = new Dialog(mView.getContext(), R.style.MyDialog);
+                mCheckDialog.setContentView(R.layout.dialog_style2);
+                ((TextView)mCheckDialog.findViewById(R.id.dialog_text)).setText("외박증을 성공적으로 제출했습니다.");
+                mCheckDialog.show();
+
+                mCheckDialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mCheckDialog.dismiss();
+                    }
+                });
+
+
+
+            }
+
+            else {
+
+
+                Log.e(TAG,"실패"+result);
+                final Dialog mCheckDialog = new Dialog(mView.getContext(), R.style.MyDialog);
+                mCheckDialog.setContentView(R.layout.dialog_style2);
+                ((TextView)mCheckDialog.findViewById(R.id.dialog_text)).setText("외박증 제출에 실패했습니다.");
+                mCheckDialog.show();
+
+                mCheckDialog.findViewById(R.id.dialog_button_yes).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mCheckDialog.dismiss();
+                    }
+                });
+
+
+            }
+
+        }
+
+
+
+        @Override
+
+        protected String doInBackground(String... params) {
+
+
+            String notice_id = params[0];
+
+            String emirim_id = params[1];
+
+            String sleep_type = params[2];
+
+
+            String serverURL = "http://54.203.113.95/insertSleepoutRecord.php";
+
+            String postParameters = "notice_id=" + notice_id + "&" + "emirim_id=" + emirim_id + "&" + "sleep_type=" + sleep_type+ "&" + "recognize=0";
+
+
+            try {
+
+
+                URL url = new URL(serverURL);
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+
+
+                httpURLConnection.setReadTimeout(5000);
+
+                httpURLConnection.setConnectTimeout(5000);
+
+                httpURLConnection.setRequestMethod("POST");
+
+                httpURLConnection.setDoInput(true);
+
+                httpURLConnection.connect();
+
+
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+
+                outputStream.write(postParameters.getBytes("UTF-8"));
+
+                outputStream.flush();
+
+                outputStream.close();
+
+
+
+                int responseStatusCode = httpURLConnection.getResponseCode();
+
+                Log.d(TAG, "response code - " + responseStatusCode);
+
+
+                InputStream inputStream;
+
+                if(responseStatusCode == HttpURLConnection.HTTP_OK) {
+
+                    inputStream = httpURLConnection.getInputStream();
+
+                }
+
+                else{
+
+                    inputStream = httpURLConnection.getErrorStream();
+
+                }
+
+
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+
+                StringBuilder sb = new StringBuilder();
+
+                String line;
+
+
+                while((line = bufferedReader.readLine()) != null){
+
+                    sb.append(line);
+
+                }
+
+
+
+                bufferedReader.close();
+
+
+
+                return sb.toString().trim();
+
+
+
+            } catch (Exception e) {
+
+
+                Log.d(TAG, "InsertData: Error ", e);
+
+                errorString = e.toString();
+
+
+                return null;
+
+            }
+
+
+        }
+
+    }
+
+
+
+
+
 
 }
 

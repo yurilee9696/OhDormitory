@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import kr.hs.emirim.uuuuri.ohdormitory.Model.BasicNotice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice;
-import kr.hs.emirim.uuuuri.ohdormitory.Model.Notice2;
 import kr.hs.emirim.uuuuri.ohdormitory.R;
 
 public class NoticeDetailActivity extends AppCompatActivity {
