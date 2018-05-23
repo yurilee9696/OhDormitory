@@ -15,6 +15,7 @@
         #box{
             margin: 50px;
             max-height: 70%;
+            
         }
         #auth-body{
             background-color: #f1f1f1;
@@ -53,6 +54,7 @@
             font-size: 1em;
             outline: none;
             cursor: pointer;
+            margin-top: 7px;
         }
         #addPoint{
             width: 90%;
@@ -62,7 +64,7 @@
         #insertUl{
             max-height: 9em;
             overflow: auto;
-            padding-left: 5px;
+            padding-left: 7px;
         }
         #pointDate{
             width: 20%;
@@ -82,7 +84,7 @@
         #selcet-div{
             text-align: center;
             display: inline-block;
-            width: 57%;
+            width: 53%;
             margin-left: 5%;
             margin-right: 5%;
             background-color: aquamarine;
@@ -107,6 +109,35 @@
             text-align: center;
             float: right;
             margin-right: 4%;
+            height: 1em;
+            margin-top: 0px;
+        }
+        #email, #phone{
+            margin-left: 6%;
+            margin-right: 5%;
+            height: 2em;
+            font-size: 1em;
+            padding: 0px;
+            padding-left: 5px;
+            border-style: none;
+        }
+        #email{
+            width: 50.9%;
+        }
+        #phone{
+            padding-left: 7px;
+            width: 50.6%;
+        }
+        .label-text{
+            width: 20%;
+            height: 1em;
+            font-size: 1em;
+            display: inline-block;
+            padding-left: 5px;
+            padding-bottom: 5px;
+        }
+        #student-info>p, #student-point>p {
+            font-size: 1.1em;
         }
         @media screen and (max-width: 600px) {
             #student-detail{
@@ -136,6 +167,7 @@
 <script>
     //상벌점 동적추가
   //  var rowIndex = 1;
+  var check=false;
   function SetValue(){
       //날짜 받아오기
       var dateInput = document.getElementById("pointDate").value;
@@ -149,6 +181,28 @@
         $("#insertUl").append("<li><div style='display:inline-block;width: 20%;height: 2em;'>"+
         dateInput+"</div><div style='display:inline-block;width: 57%;margin-left: 7%;margin-right: 5%;'>"+
         pointStr+"</div><div style='display:inline-block;width: 9%;text-align:center;'>"+point+"</div></li>");
+    }
+    //정보수정 버튼을 누른 경우
+    function infoChange(){
+        var changeBtn = document.getElementById("info-change");
+        if(check==false){ //정보 수정 버튼을 누른 경우
+            changeBtn.value="저장";
+            changeBtn.style.width="11%";
+            $("input[name='email']").attr("readonly", false);
+            $("input[name='phone']").attr("readonly", false);
+            $("input[name='email']").css("border", "1px solid #BBBBBB");
+            $("input[name='phone']").css("border", "1px solid #BBBBBB");
+            check=true;
+        }
+        else{ //저장 버튼을 누른 경우
+            changeBtn.value="정보수정";
+            changeBtn.style.width="15%";
+            $("input[name='email']").attr("readonly", true);
+            $("input[name='phone']").attr("readonly", true);
+            $("input[name='email']").css("border", "none");
+            $("input[name='phone']").css("border", "none");
+            check=false;
+        }
     }
 </script>
 
@@ -168,8 +222,13 @@
                         <div id="student-info">
                             <p>이유리 401호</p> <!--form에서 검색한 데이터로 교체-->
                             <form id="student-form">
-                                <label>이메일</label><input type="email" value="wwhhoo0011@e-mirim.hs.kr"><br>
-                                <label>학부모 연락처</label><input type="text" value="01033909696"><input type="button" id="info-change" value="정보수정">
+                                <div class="label-text">이메일</div>
+                                <input type="email" id="email" name="email" value="wwhhoo0011@e-mirim.hs.kr" readonly="readonly"><br>
+                                <div>
+                                    <div class="label-text">학부모 연락처</div>
+                                    <input type="text" id="phone" name="phone"  value="01033909696" readonly="readonly">
+                                    <input type="button" id="info-change" value="정보수정" onclick="infoChange()">
+                                </div>
                             </form>
                         </div>
                         <div id="student-point">
