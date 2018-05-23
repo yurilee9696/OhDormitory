@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/search.css" />
+    <title>회원관리</title>
+    <style>
+        html,body{
+            margin: 0px;
+            width: 100%;
+            overflow: hidden;
+        }
+        #box{
+            margin: 50px;
+            max-height: 70%;
+            
+        }
+        #auth-body{
+            background-color: #f1f1f1;
+            margin-top: 75px;
+            height: 100%;
+            width: 100%;
+            overflow: scroll;
+            position: absolute;
+        }
+        #student-detail{
+            background-color: #fff;
+            width: 49em;
+            margin: 0 auto;
+            border-radius: 15px;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            box-shadow: 0px 3px 11px rgba(0, 0, 0, 0.13);
+            max-height: 30em;
+        }
+        #student-form{
+            width: 90%;
+            margin: 0 auto;
+        }
+        #info-change{
+            float: right;
+            width: 15%;
+            background-color: #FCD465;
+            border: #FCD465;
+            height: 2em;
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1em;
+            outline: none;
+            cursor: pointer;
+            margin-top: 7px;
+        }
+        #addPoint{
+            width: 90%;
+            height: 30%;
+            margin: 0 auto;
+        }
+        #insertUl{
+            max-height: 9em;
+            overflow: auto;
+            padding-left: 7px;
+        }
+        #pointDate{
+            width: 20%;
+            height: 2em;
+            font-size: 1em;
+            padding: 1px;
+            outline: none;
+            font-family:  Times, serif,"Times New Roman",;
+        }
+        #point-select{
+            width: 100%;
+            height: 2em;
+            font-size: 1em;
+            outline: none;
+            margin-bottom: 0;
+        }
+        #selcet-div{
+            text-align: center;
+            display: inline-block;
+            width: 53%;
+            margin-left: 5%;
+            margin-right: 5%;
+            background-color: aquamarine;
+        }
+        #addBtn{
+            background-color: #FCD465;
+            border: #FCD465;
+            width: 11%;
+            height: 2em;
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1em;
+            float: right;
+            outline: none;
+            cursor: pointer;
+        }
+        #pointStr{
+            padding-left: 10px;
+        }
+        #point-calculation{
+            width: 4.5em;
+            text-align: center;
+            float: right;
+            margin-right: 4%;
+            height: 1em;
+            margin-top: 0px;
+        }
+        #email, #phone{
+            margin-left: 6%;
+            margin-right: 5%;
+            height: 2em;
+            font-size: 1em;
+            padding: 0px;
+            padding-left: 5px;
+            border-style: none;
+        }
+        #email{
+            width: 50.9%;
+        }
+        #phone{
+            padding-left: 7px;
+            width: 50.6%;
+        }
+        .label-text{
+            width: 20%;
+            height: 1em;
+            font-size: 1em;
+            display: inline-block;
+            padding-left: 5px;
+            padding-bottom: 5px;
+        }
+        #student-info>p, #student-point>p {
+            font-size: 1.1em;
+        }
+        @media screen and (max-width: 600px) {
+            #student-detail{
+                width: 90%;
+            }
+            #pointDate{
+                width: 90%;
+            }
+            #point-select{
+                width: 90%;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+            #student-point{
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+      $(document).ready(function(){
+         $("#header").load("header.html")    
+      });
+</script>  
+
+<script>
+    //상벌점 동적추가
+  //  var rowIndex = 1;
+  var check=false;
+  function SetValue(){
+      //날짜 받아오기
+      var dateInput = document.getElementById("pointDate").value;
+      //상벌점 받아오기
+      var fm = document.addPoint;
+      var point = fm.pointInput.options[fm.pointInput.selectedIndex].value; //상벌점 값이 저장되는 변수
+     //선택한 텍스트 받아오기
+      var pointStr = fm.pointInput.options[fm.pointInput.selectedIndex].text; //선택된 텍스트를 받아옴
+      //alert("point "+point+"이고 텍스트 : "+pointStr);
+
+        $("#insertUl").append("<li><div style='display:inline-block;width: 20%;height: 2em;'>"+
+        dateInput+"</div><div style='display:inline-block;width: 57%;margin-left: 7%;margin-right: 5%;'>"+
+        pointStr+"</div><div style='display:inline-block;width: 9%;text-align:center;'>"+point+"</div></li>");
+    }
+    //정보수정 버튼을 누른 경우
+    function infoChange(){
+        var changeBtn = document.getElementById("info-change");
+        if(check==false){ //정보 수정 버튼을 누른 경우
+            changeBtn.value="저장";
+            changeBtn.style.width="11%";
+            $("input[name='email']").attr("readonly", false);
+            $("input[name='phone']").attr("readonly", false);
+            $("input[name='email']").css("border", "1px solid #BBBBBB");
+            $("input[name='phone']").css("border", "1px solid #BBBBBB");
+            check=true;
+        }
+        else{ //저장 버튼을 누른 경우
+            changeBtn.value="정보수정";
+            changeBtn.style.width="15%";
+            $("input[name='email']").attr("readonly", true);
+            $("input[name='phone']").attr("readonly", true);
+            $("input[name='email']").css("border", "none");
+            $("input[name='phone']").css("border", "none");
+            check=false;
+        }
+    }
+</script>
+
+
+<body>
+        <div id="header"></div>
+        <div id="auth-body">
+           <div>
+               <div id="search-div">
+                    <form action="authDetail.html" class="search-container">
+                        <input type="text" placeholder="Search.." name="search">
+                        <button type="submit"><img id="searchIcon" src="image/searchIcon.svg" alt="web Icon" height="32" width="32"></button>
+                    </form>
+                </div>
+                <div id="student-detail">
+                    <div id="box">
+                        <div id="student-info">
+                            <p>이유리 401호</p> <!--form에서 검색한 데이터로 교체-->
+                            <form id="student-form">
+                                <div class="label-text">이메일</div>
+                                <input type="email" id="email" name="email" value="wwhhoo0011@e-mirim.hs.kr" readonly="readonly"><br>
+                                <div>
+                                    <div class="label-text">학부모 연락처</div>
+                                    <input type="text" id="phone" name="phone"  value="01033909696" readonly="readonly">
+                                    <input type="button" id="info-change" value="정보수정" onclick="infoChange()">
+                                </div>
+                            </form>
+                        </div>
+                        <div id="student-point">
+                            <p>상벌점</p>
+                            <form name="addPoint" id="addPoint">
+                                <ul name='insertUl' id='insertUl' border=0 cellpadding=0 cellspacing=0 style="list-style-type: none;">
+                                    
+                                </ul>
+                                <input type="date" id="pointDate">
+                                <div id="selcet-div">
+                                    <select name="pointInput" id="point-select">
+                                        <optgroup label="벌점">
+
+                                            <option value="-5">타호실 무단 취침</option>
+                                            <option value="-5">취침시간 소란</option>
+                                            <option value="-5">무단외출</option>
+                                            <option value="-5">무단입실</option>
+                                            <option value="-5">무단외박</option>
+                                            <option value="-5">외부인 무단 출입</option>
+                                            <option value="-5">사감통제 불이행</option>
+                                            <option value="-5">태도 불손 및 불량</option>
+                                            <option value="-5">언어폭력 또는 따돌림</option>
+
+                                            <option value="-3">무단지각</option>
+                                            <option value="-3">기숙사내 각종 소란 행위</option>
+                                            <option value="-3">허가되지 않은 전열⸱전자기기 사용</option>
+                                            <option value="-3">불건전 물품 반입</option>
+                                            <option value="-3">시설물 고의 파손</option>
+
+                                            <option value="-2">타호실 무단 출입</option>
+                                            <option value="-2">당번 활동 불량</option>
+                                            <option value="-2">외부 음식물 반입</option>
+                                            <option value="-2">호실원에게 피해</option>
+                                            <option value="-2">인사예절 불량</option>
+                                            <option value="-2">선⸱후배 질서 문란</option>
+                                            <option value="-2">복도 ⸱ 호실에서 쓰레기 투기</option>
+                                            <option value="-2">창밖으로 쓰레기 투척</option>
+                                            <option value="-2">개인쓰레기 공동구역에 무단 투기</option>
+                                            <option value="-2">중앙통로 침입</option>
+
+                                            <option value="-1">점호 불참 및 점호 시 태도 불량</option>
+                                            <option value="-1">취침시간 소등위반</option>
+                                            <option value="-1">공동구역 사용시간 위반</option>
+                                            <option value="-1">기숙사내 실내화 미착용</option>
+                                            <option value="-1">복장 및 두발 불량</option>
+                                            <option value="-1">교문 밖 출입 시 용의 불량</option>
+                                            <option value="-1">개인위생 불결</option>
+                                            <option value="-1">개인 세탁물 및 소지품 관리 불량</option>
+                                            <option value="-1">호실 청소상태 불량</option>
+                                            <option value="-1">외박증 미인증</option>
+                                            <option value="-1">퇴실시간 위반</option>
+                                            <option value="-1">아침점호 후 재입실</option>
+                                        </optgroup>
+                                        <optgroup label="상점">
+                                            <option value="0.5">공동구역 모범 청소</option>
+                                            <option value="0.5">호실청소</option>
+                                            <option value="0.5">기타 가산점</option>
+
+                                            <option value="1">층장 활동</option>
+                                            <option value="1">기숙사 행사 도움</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <input id="addBtn" type="button" value="추가" onclick='javascript:SetValue();'>
+                            
+                            </form> 
+                            <hr>
+                            <input type="text" readonly value="+0" id="point-calculation">
+                        </div>
+                    </div>
+                </div>
+             </div>
+             
+        </div>
+    </body>
+    </html>
