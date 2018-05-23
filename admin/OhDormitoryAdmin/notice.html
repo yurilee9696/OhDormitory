@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>공지사항</title>
+    <style>
+        html,body{
+            margin: 0px;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        #auth-body{
+            background-color: #f1f1f1;
+            margin-top: 75px;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+        #myBtn{
+            float: right;
+            width: 12%;
+            background-color: #FCD465;
+            border: #FCD465;
+            height: 2em;
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1em;
+            outline: none;
+            cursor: pointer;
+            margin-top: 7px;
+        }
+       /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            width: 40em;
+            border-radius: 15px;
+            box-shadow: 0px 3px 11px rgba(0, 0, 0, 0.13);
+        }
+
+    </style>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+      $(document).ready(function(){
+         $("#header").load("header.html")    
+      });
+      
+    //체크옵션에 따라 세부사항
+    function changeNoticeKind() {
+      var select_notice = document.getElementById("select_notice");
+      var select_clean = document.getElementById("select_clean");
+      var select_sleep = document.getElementById("select_sleep");
+      var notice_kind = document.getElementById("notice_kind");
+      if (notice_kind.value == "공지사항") {
+        select_notice.style.display = "block";
+        select_clean.style.display = "none";
+        select_sleep.style.display = "none";
+        $("#notice_title").val("");
+        $("#notice_title").removeAttr('disabled');
+     //   $("#w_time, #d_time").datepicker("option", "disabled", false);
+      } else if (notice_kind.value == "청소구역") {
+        select_notice.style.display = "none";
+        select_clean.style.display = "block";
+        select_sleep.style.display = "none";
+        $("#notice_title").val("청소구역");
+        $("#notice_title").attr('disabled', 'disabled');
+    //    $("#w_time, #d_time").datepicker("option", "disabled", true);
+      } else if(notice_kind.value == "외박일지"){
+        select_notice.style.display = "none";
+        select_clean.style.display = "none";
+        select_sleep.style.display = "block";
+      //  $("#sleep_w_time, #sleep_d_time").datepicker();
+        $("#notice_title").val("외박일지 작성");
+        $("#notice_title").attr('disabled', 'disabled');
+      //  $("#w_time, #d_time").datepicker("option", "disabled", false);
+      }
+    }
+</script>
+<body>
+    <div id="header"></div>
+    <div id="auth-body">
+            <button id="myBtn">추가하기</button>
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <form>
+                        <select name="게시종류" id="notice_kind" onclick="changeNoticeKind(); return false;">
+                            <option value=""></option>
+                            <option value="공지사항">공지사항</option>
+                            <option value="청소구역">청소구역</option>
+                            <option value="외박일지">외박일지</option>
+                        </select>
+                        <div>
+                            <input type="text" id="w_time"> -
+                            <input type="text" id="d_time">
+                        </div>
+                        <div>
+                            <input type="text" id="notice_title" style="float:left;">
+                        </div>
+                              <!-- 여기 위까지가 공통 -->
+
+                        <!-- 이거는 공지사항 세부사항 -->
+                        <div id="select_notice" style="display:none">
+                                <div id="dialogBtn">공지내용</div>
+                                <textarea type="text" id="notice_content"></textarea>
+                                <br>
+                                <br>
+                            </div>
+                            <!-- 공지사항-->
+                            <div id="select_notice" style="display:none">
+                                <textarea type="text" id="notice_content"></textarea>
+                                <br>
+                                <br>
+                            </div>
+                            <!--청소구역-->
+                            <div id="select_clean" style="display:none">
+                                <table id="dialogTable">
+                                <tr>
+                                    <td>세면실</td>
+                                    <td>세탁실/탈의실</td>
+                                    <td>샤워실</td>
+                                    <td>복도</td>
+                                    <td>휴게실</td>
+                                    <td>계단</td>
+                                    <td>화장실</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="4-clean-0" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 100px" id="4-clean-1" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="4-clean-2" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="4-clean-3" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="4-clean-4" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="4-clean-5" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="4-clean-6" class="inputBorder">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="5-clean-0" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 100px" id="5-clean-1" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="5-clean-2" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="5-clean-3" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="5-clean-4" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="5-clean-5" class="inputBorder">
+                                    </td>
+                                    <td>
+                                    <input type="text" style="width: 60px" id="5-clean-6" class="inputBorder">
+                                    </td>
+                                </tr>
+                                </table>
+                        
+                                <span id="guideMessage"></span>
+                            </div>
+                            <!--외박일지-->
+                            <div id="select_sleep" style="display:none">
+                                    <input type="text" id="sleep_w_time"> -
+                                    <input type="text" id="sleep_d_time">
+                            </div>
+
+
+
+
+
+
+
+                        <div>
+                            <input type="submit" value="등록">
+                            <input type="button" class="close" value="취소">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+            // Get the modal
+            var modal = document.getElementById('myModal');
+            // Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+            
+            // When the user clicks the button, open the modal 
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+            
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+            
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+    </script>
+    <script type="text/javascript">
+        for (var i = 1; i < 7; i++) {
+          $("#4-clean-" + i).attr('disabled', 'disabled');
+          $("#5-clean-" + i).attr('disabled', 'disabled');
+        }
+        $("#guideMessage").html("첫 번째 구역을 설정하시면 자동으로 계산됩니다.");
+        $("#4-clean-0").change(function() {
+          if ($("#4-clean-0").val() < 401 || $("#4-clean-0").val() > 418) {
+            alert("호수를 잘못 입력하셨습니다.");
+            return;
+          }
+          $("#guideMessage").html("");
+          var number = parseInt($("#4-clean-0").val());
+          for (var i = 1; i < 7; i++) {
+            number++;
+            if (number > 418)
+              number = 401;
+            $("#4-clean-" + i).removeAttr('disabled');
+            $("#4-clean-" + i).val(number);
+          }
+        });
+        $("#5-clean-0").change(function() {
+          if ($("#5-clean-0").val() < 501 || $("#5-clean-0").val() > 519) {
+            alert("호수를 잘못 입력하셨습니다.");
+            return;
+          }
+          $("#guideMessage").html("");
+          var number = parseInt($("#5-clean-0").val());
+          for (var i = 1; i < 7; i++) {
+            number++;
+            if (number > 519)
+              number = 501;
+            $("#5-clean-" + i).removeAttr('disabled');
+            $("#5-clean-" + i).val(number);
+          }
+        });
+      
+        </script>
+</body>
+</html>
