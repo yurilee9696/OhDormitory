@@ -157,7 +157,7 @@ public class MainActivity extends BaseActivity {
             f.sendRegistrationToServer();
 
             GetData task = new GetData();
-            task.execute("http://54.203.113.95/getSleepoutQRInfo.php?parent_phone=" + myNumber);
+            task.execute("http://54.203.113.95:8080/getSleepoutQRInfo.php?parent_phone=" + myNumber);
 //
 //                    FirebaseInstanceIDService fcmIDservice=new FirebaseInstanceIDService();
 //                    fcmIDservice.sendRegistrationToServer(myNumber);

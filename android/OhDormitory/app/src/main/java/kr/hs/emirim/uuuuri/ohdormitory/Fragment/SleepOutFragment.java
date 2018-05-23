@@ -91,7 +91,7 @@ public class SleepOutFragment extends Fragment {
         mUser = getUserInfo();
 //        checkRecognize(view);
         GetData task = new GetData();
-        task.execute("http://54.203.113.95/getSleepoutRecord.php?userID="+mUser.getEmirim_id());
+        task.execute("http://54.203.113.95:8080/getSleepoutRecord.php?userID="+mUser.getEmirim_id());
 
 
         return mView;
