@@ -266,7 +266,7 @@ public class QRCamActivity extends AppCompatActivity {
 
 
 
-            String serverURL = "http://54.203.113.95:8080/updateSleepoutRecognize.php";
+            String serverURL = "http://54.203.113.95/updateSleepoutRecognize.php";
 
             String postParameters = "notice_id=" + notice_id + "&" + "emirim_id=" + emirim_id;
 

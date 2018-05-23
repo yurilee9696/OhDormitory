@@ -294,7 +294,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
             String sleep_type = params[2];
 
 
-            String serverURL = "http://54.203.113.95:8080/insertSleepoutRecord.php";
+            String serverURL = "http://54.203.113.95/insertSleepoutRecord.php";
 
             String postParameters = "notice_id=" + notice_id + "&" + "emirim_id=" + emirim_id + "&" + "sleep_type=" + sleep_type+ "&" + "recognize=0";
 
