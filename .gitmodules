@@ -1,0 +1,3 @@
+[submodule "server/OhDormitory-Server"]
+	path = server/OhDormitory-Server
+	url = https://github.com/zoripong/OhDormitory-Server.git
